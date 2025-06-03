@@ -49,36 +49,6 @@ const Index = () => {
               <MealSearch onBack={() => setActiveView("home")} isInline={true} />
             </div>
 
-            {/* Browse Toggle */}
-            <div>
-              <div className="flex bg-gray-100 rounded-xl p-1 mb-4">
-                <Button
-                  variant={browseMode === "restaurants" ? "default" : "ghost"}
-                  onClick={() => setBrowseMode("restaurants")}
-                  className="flex-1 h-10 rounded-lg transition-all duration-200"
-                >
-                  <List className="w-4 h-4 mr-2" />
-                  Restaurants
-                </Button>
-                <Button
-                  variant={browseMode === "categories" ? "default" : "ghost"}
-                  onClick={() => setBrowseMode("categories")}
-                  className="flex-1 h-10 rounded-lg transition-all duration-200"
-                >
-                  <Grid2x2 className="w-4 h-4 mr-2" />
-                  Categories
-                </Button>
-              </div>
-
-              <Button
-                onClick={() => setActiveView("browse")}
-                variant="outline"
-                className="w-full h-12 border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold rounded-xl transition-all duration-200"
-              >
-                Browse {browseMode === "restaurants" ? "Restaurants" : "Categories"}
-              </Button>
-            </div>
-
             {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
