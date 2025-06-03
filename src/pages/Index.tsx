@@ -1,10 +1,11 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import GameIcons from "@/components/GameIcons";
 import QuizFlow from "@/components/QuizFlow";
 import RandomPick from "@/components/RandomPick";
+import SimpleGame from "@/components/SimpleGame";
+import DicePicker from "@/components/DicePicker";
 import BrowseSection from "@/components/BrowseSection";
 import MealSearch from "@/components/MealSearch";
 import RestaurantCatalogue from "@/components/RestaurantCatalogue";
@@ -17,6 +18,18 @@ const Index = () => {
 
   const handleMoodMatcherClick = () => {
     setActiveView("quiz");
+  };
+
+  const handleRandomPickClick = () => {
+    setActiveView("random");
+  };
+
+  const handleGameClick = () => {
+    setActiveView("game");
+  };
+
+  const handleDiceClick = () => {
+    setActiveView("dice");
   };
 
   const handleSearchClick = () => {
@@ -39,6 +52,10 @@ const Index = () => {
         return <QuizFlow onBack={handleBackToHome} />;
       case "random":
         return <RandomPick onBack={handleBackToHome} />;
+      case "game":
+        return <SimpleGame onBack={handleBackToHome} />;
+      case "dice":
+        return <DicePicker onBack={handleBackToHome} />;
       case "browse":
         return (
           <BrowseSection
@@ -60,7 +77,12 @@ const Index = () => {
         return (
           <div className="space-y-6">
             {/* Game Icons */}
-            <GameIcons onMoodMatcherClick={handleMoodMatcherClick} />
+            <GameIcons 
+              onMoodMatcherClick={handleMoodMatcherClick}
+              onRandomPickClick={handleRandomPickClick}
+              onGameClick={handleGameClick}
+              onDiceClick={handleDiceClick}
+            />
 
             {/* Search Input */}
             <div className="px-2">
