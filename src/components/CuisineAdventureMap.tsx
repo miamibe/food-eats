@@ -217,10 +217,12 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                     🍽️
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap">
-                    <div className="font-bold text-gray-800 mb-2">{position.label}</div>
-                    <div className="space-y-1">
+                    <div className="font-bold text-gray-800 mb-1">{position.label}</div>
+                    <div className="flex items-center space-x-2">
                       {position.dishes.map((dish, index) => (
-                        <div key={index} className="text-xs text-gray-600">• {dish}</div>
+                        <span key={index} className="text-xs text-gray-600">
+                          {index > 0 ? ' • ' : ''}{dish}
+                        </span>
                       ))}
                     </div>
                   </div>
