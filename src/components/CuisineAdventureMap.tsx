@@ -194,7 +194,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
         <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden">
           {/* Base Map Image */}
           <img 
-            src="/ChatGPT Image 3 июн. 2025 г., 17_44_25.png" 
+            src="/game-like-map.png" 
             alt="World Map"
             className="w-full h-full object-cover"
           />
@@ -216,13 +216,13 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform cursor-pointer hover:bg-red-600">
                     🍽️
                   </div>
-                  <div className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap z-10">
-                    <div className="font-bold text-gray-800 mb-1">{position.label}</div>
-                    <div className="flex items-center gap-2">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-lg shadow-lg mt-1 text-sm whitespace-nowrap z-10">
+                    <div className="font-medium text-gray-800">{position.label}</div>
+                    <div className="flex items-center gap-1 text-xs text-gray-600 mt-0.5">
                       {position.dishes.map((dish, index) => (
                         <React.Fragment key={index}>
-                          {index > 0 && <span className="text-gray-400">•</span>}
-                          <span className="text-xs text-gray-600">{dish}</span>
+                          {index > 0 && <span className="text-gray-300 mx-1">•</span>}
+                          {dish}
                         </React.Fragment>
                       ))}
                     </div>
