@@ -82,7 +82,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          query: `${description} ${cuisineType} cuisine` 
+          query: `${description} ${cuisineType} cuisine traditional authentic` 
         }),
       });
 
