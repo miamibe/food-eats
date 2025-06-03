@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart, addToCart } from "@/lib/cart";
 
 interface MealSearchProps {
   onBack: () => void;
@@ -26,14 +27,31 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { dispatch } = useCart();
 
   useEffect(() => {
-    // Focus on input when component mounts
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        setShowScrollTop(containerRef.current.scrollTop > 200);
+      }
+    };
+
+    containerRef.current?.addEventListener('scroll', handleScroll);
+    return () => containerRef.current?.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const searchMealsWithSupabase = async () => {
     if (!query.trim()) {
@@ -78,8 +96,19 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
     }
   };
 
+  const handleAddToCart = (meal: Meal) => {
+    addToCart(dispatch, {
+      id: meal.id,
+      name: meal.name,
+      price: parseFloat(meal.price.replace('$', '')),
+      quantity: 1,
+      restaurant: meal.restaurant,
+      emoji: meal.emoji
+    });
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" ref={containerRef}>
       {/* Header */}
       <div className="flex items-center space-x-3">
         <Button variant="ghost" onClick={onBack} className="p-2 hover:bg-gray-50">
@@ -128,40 +157,30 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
           <h3 className="text-base font-medium text-gray-700">
             Perfect matches for "{query}"
           </h3>
-          {meals.map((meal, index) => (
-            <Card key={meal.id || index} className="p-4 border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="text-xl">{meal.emoji}</div>
+          <div className="space-y-2">
+            {meals.map((meal) => (
+              <Card 
+                key={meal.id} 
+                className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => handleAddToCart(meal)}
+              >
+                <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium text-gray-800">{meal.name}</h4>
-                    <p className="text-sm text-gray-600">{meal.restaurant}</p>
-                    <p className="text-xs text-gray-500 mt-1">{meal.description}</p>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl">{meal.emoji}</span>
+                      <div>
+                        <h4 className="font-medium text-gray-800">{meal.name}</h4>
+                        <p className="text-sm text-gray-600">{meal.restaurant}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium text-gray-800">{meal.price}</p>
+                    <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-gray-800 font-medium text-sm">{meal.price}</div>
-                  <div className="text-gray-500 text-sm">{meal.deliveryTime}</div>
-                </div>
-              </div>
-            </Card>
-          ))}
-          
-          <div className="flex space-x-3 mt-6">
-            <Button 
-              onClick={() => {
-                setQuery("");
-                setMeals([]);
-                setHasSearched(false);
-              }}
-              variant="outline" 
-              className="flex-1 border-gray-200 hover:bg-gray-50"
-            >
-              New Search
-            </Button>
-            <Button className="flex-1 bg-gray-800 hover:bg-gray-700">
-              Order Now
-            </Button>
+              </Card>
+            ))}
           </div>
         </div>
       )}
@@ -171,6 +190,18 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
         <div className="text-center py-8">
           <p className="text-gray-500 text-sm">No matches found. Try describing what you're craving differently!</p>
         </div>
+      )}
+
+      {/* Scroll to top button */}
+      {showScrollTop && (
+        <Button
+          variant="outline"
+          size="icon"
+          className="fixed bottom-4 right-4 rounded-full shadow-lg"
+          onClick={scrollToTop}
+        >
+          <ArrowUp className="h-4 w-4" />
+        </Button>
       )}
     </div>
   );
