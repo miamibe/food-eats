@@ -1,15 +1,15 @@
 
 import { Button } from "@/components/ui/button";
-import { Brain, Shuffle, Gamepad2, Dice6 } from "lucide-react";
+import { Brain, MapPin, Gamepad2, TrendingUp } from "lucide-react";
 
 interface GameIconsProps {
   onMoodMatcherClick: () => void;
-  onRandomPickClick: () => void;
+  onCuisineMapClick: () => void;
   onGameClick: () => void;
-  onDiceClick: () => void;
+  onTrendBitesClick: () => void;
 }
 
-const GameIcons = ({ onMoodMatcherClick, onRandomPickClick, onGameClick, onDiceClick }: GameIconsProps) => {
+const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrendBitesClick }: GameIconsProps) => {
   return (
     <div className="grid grid-cols-4 gap-3 px-2">
       <Button
@@ -24,12 +24,12 @@ const GameIcons = ({ onMoodMatcherClick, onRandomPickClick, onGameClick, onDiceC
       
       <Button
         variant="outline"
-        onClick={onRandomPickClick}
+        onClick={onCuisineMapClick}
         className="h-20 flex flex-col items-center justify-center space-y-1 border-green-200 bg-gradient-to-br from-green-50 to-emerald-100 hover:from-green-100 hover:to-emerald-200 transition-all duration-300 transform hover:scale-105 relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-teal-500/20 opacity-50"></div>
-        <Shuffle className="w-6 h-6 text-green-600 relative z-10" />
-        <span className="text-xs text-green-700 font-medium relative z-10">Random</span>
+        <MapPin className="w-6 h-6 text-green-600 relative z-10" />
+        <span className="text-xs text-green-700 font-medium relative z-10">Map</span>
       </Button>
 
       <Button
@@ -44,12 +44,12 @@ const GameIcons = ({ onMoodMatcherClick, onRandomPickClick, onGameClick, onDiceC
 
       <Button
         variant="outline"
-        onClick={onDiceClick}
+        onClick={onTrendBitesClick}
         className="h-20 flex flex-col items-center justify-center space-y-1 border-orange-200 bg-gradient-to-br from-orange-50 to-red-100 hover:from-orange-100 hover:to-red-200 transition-all duration-300 transform hover:scale-105 relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-red-500/20 opacity-50"></div>
-        <Dice6 className="w-6 h-6 text-orange-600 relative z-10" />
-        <span className="text-xs text-orange-700 font-medium relative z-10">Dice</span>
+        <TrendingUp className="w-6 h-6 text-orange-600 relative z-10" />
+        <span className="text-xs text-orange-700 font-medium relative z-10">Trends</span>
       </Button>
     </div>
   );

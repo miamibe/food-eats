@@ -1,11 +1,12 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import GameIcons from "@/components/GameIcons";
 import QuizFlow from "@/components/QuizFlow";
-import RandomPick from "@/components/RandomPick";
+import CuisineAdventureMap from "@/components/CuisineAdventureMap";
 import SimpleGame from "@/components/SimpleGame";
-import DicePicker from "@/components/DicePicker";
+import TrendBites from "@/components/TrendBites";
 import BrowseSection from "@/components/BrowseSection";
 import MealSearch from "@/components/MealSearch";
 import RestaurantCatalogue from "@/components/RestaurantCatalogue";
@@ -20,16 +21,16 @@ const Index = () => {
     setActiveView("quiz");
   };
 
-  const handleRandomPickClick = () => {
-    setActiveView("random");
+  const handleCuisineMapClick = () => {
+    setActiveView("cuisine-map");
   };
 
   const handleGameClick = () => {
     setActiveView("game");
   };
 
-  const handleDiceClick = () => {
-    setActiveView("dice");
+  const handleTrendBitesClick = () => {
+    setActiveView("trend-bites");
   };
 
   const handleSearchClick = () => {
@@ -50,12 +51,12 @@ const Index = () => {
     switch (activeView) {
       case "quiz":
         return <QuizFlow onBack={handleBackToHome} />;
-      case "random":
-        return <RandomPick onBack={handleBackToHome} />;
+      case "cuisine-map":
+        return <CuisineAdventureMap onBack={handleBackToHome} />;
       case "game":
         return <SimpleGame onBack={handleBackToHome} />;
-      case "dice":
-        return <DicePicker onBack={handleBackToHome} />;
+      case "trend-bites":
+        return <TrendBites onBack={handleBackToHome} />;
       case "browse":
         return (
           <BrowseSection
@@ -79,9 +80,9 @@ const Index = () => {
             {/* Game Icons */}
             <GameIcons 
               onMoodMatcherClick={handleMoodMatcherClick}
-              onRandomPickClick={handleRandomPickClick}
+              onCuisineMapClick={handleCuisineMapClick}
               onGameClick={handleGameClick}
-              onDiceClick={handleDiceClick}
+              onTrendBitesClick={handleTrendBitesClick}
             />
 
             {/* Search Input */}
