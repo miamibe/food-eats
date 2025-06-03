@@ -112,7 +112,7 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
 
   useEffect(() => {
     const dish = trendingDishes[currentTrend];
-    const searchQuery = `${dish.name} ${dish.description} ${dish.origin.split(' ')[0]} cuisine`;
+    const searchQuery = `${dish.description} ${dish.origin.split(' ')[0]} cuisine`;
     fetchSimilarMeals(searchQuery);
   }, [currentTrend]);
 
