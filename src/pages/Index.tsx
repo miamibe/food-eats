@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
@@ -91,7 +90,7 @@ const Index = () => {
                 onClick={handleSearchClick}
                 className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-colors"
               >
-                Tell us what you want
+                Hungry? Tell the AI what you're in the mood for
               </button>
             </div>
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,7 +93,7 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
         <div className="relative">
           <Input
             ref={inputRef}
-            placeholder="Tell us what you want..."
+            placeholder="Hungry? Tell the AI what you're in the mood for"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyPress={handleKeyPress}
