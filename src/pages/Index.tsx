@@ -2,11 +2,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User, Search } from "lucide-react";
-import QuickGames from "@/components/QuickGames";
+import GameIcons from "@/components/GameIcons";
 import QuizFlow from "@/components/QuizFlow";
 import RandomPick from "@/components/RandomPick";
 import BrowseSection from "@/components/BrowseSection";
 import MealSearch from "@/components/MealSearch";
+import RestaurantCatalogue from "@/components/RestaurantCatalogue";
 
 const Index = () => {
   const [activeView, setActiveView] = useState("home");
@@ -14,6 +15,10 @@ const Index = () => {
 
   const handleMoodMatcherClick = () => {
     setActiveView("quiz");
+  };
+
+  const handleSearchClick = () => {
+    setActiveView("search");
   };
 
   const renderMainContent = () => {
@@ -33,24 +38,22 @@ const Index = () => {
         return <MealSearch onBack={() => setActiveView("home")} />;
       default:
         return (
-          <div className="space-y-8">
-            {/* Quick Games Section */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-700 mb-3">
-                Quick Games
-              </h2>
-              <QuickGames onMoodMatcherClick={handleMoodMatcherClick} />
+          <div className="space-y-6">
+            {/* Game Icons */}
+            <GameIcons onMoodMatcherClick={handleMoodMatcherClick} />
+
+            {/* Search Input */}
+            <div className="px-2">
+              <button
+                onClick={handleSearchClick}
+                className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-colors"
+              >
+                Tell us what you want
+              </button>
             </div>
 
-            {/* Welcome Message */}
-            <div className="text-center py-6">
-              <h3 className="text-xl font-medium text-gray-800 mb-2">
-                What are you craving?
-              </h3>
-              <p className="text-gray-500 text-sm">
-                Use the search button below to tell us what you want
-              </p>
-            </div>
+            {/* Restaurant Catalogue */}
+            <RestaurantCatalogue />
           </div>
         );
     }
@@ -77,19 +80,6 @@ const Index = () => {
       <main className="px-4 py-6 max-w-md mx-auto pb-20">
         {renderMainContent()}
       </main>
-
-      {/* Floating Action Button */}
-      {activeView === "home" && (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-          <Button
-            onClick={() => setActiveView("search")}
-            className="w-12 h-12 rounded-full bg-gray-800 hover:bg-gray-700 shadow-sm transition-colors duration-200"
-            size="icon"
-          >
-            <Search className="w-5 h-5 text-white" />
-          </Button>
-        </div>
-      )}
     </div>
   );
 };
