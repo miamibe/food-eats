@@ -212,17 +212,18 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                   left: position.left,
                 }}
               >
-                <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform">
+                <div className="relative">
+                  <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform cursor-pointer hover:bg-red-600">
                     🍽️
                   </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap z-10">
                     <div className="font-bold text-gray-800 mb-1">{position.label}</div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       {position.dishes.map((dish, index) => (
-                        <span key={index} className="text-xs text-gray-600">
-                          {index > 0 ? ' • ' : ''}{dish}
-                        </span>
+                        <React.Fragment key={index}>
+                          {index > 0 && <span className="text-gray-400">•</span>}
+                          <span className="text-xs text-gray-600">{dish}</span>
+                        </React.Fragment>
                       ))}
                     </div>
                   </div>
@@ -230,17 +231,17 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
               </button>
             );
           })}
-        </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <div className="text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-600">Loading restaurants...</p>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-600" />
+                <p className="text-gray-600">Loading restaurants...</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Selected Restaurant Details */}
         {selectedRegion && (
@@ -308,7 +309,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-gray-800">{meal.price}</p>
+                          <p className="font-medium text-gray-800">${meal.price}</p>
                           <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
                         </div>
                       </div>
