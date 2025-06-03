@@ -100,8 +100,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-white border-b border-gray-100 px-4 py-3">
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 px-4 py-3 z-50">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
@@ -121,7 +121,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="px-4 py-6 max-w-md mx-auto pb-20">
+      <main className="flex-1 px-4 py-6 max-w-md mx-auto pb-20 mt-[72px]">
         {renderMainContent()}
       </main>
     </div>
