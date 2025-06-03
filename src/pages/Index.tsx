@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
+import { User, Search } from "lucide-react";
 import GameIcons from "@/components/GameIcons";
 import QuizFlow from "@/components/QuizFlow";
 import CuisineAdventureMap from "@/components/CuisineAdventureMap";
@@ -99,9 +99,14 @@ const Index = () => {
 
             <button
               onClick={handleSearchClick}
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-colors"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors relative group"
             >
-              Hungry? Tell the AI what you're in the mood for
+              <div className="flex items-center">
+                <Search className="w-5 h-5 text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
+                <span className="text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Hungry? Tell the AI what you're in the mood for
+                </span>
+              </div>
             </button>
 
             <RestaurantCatalogue onRestaurantClick={handleRestaurantClick} />
