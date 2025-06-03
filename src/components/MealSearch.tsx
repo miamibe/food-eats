@@ -72,24 +72,24 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50 px-4 py-6">
+    <div className="min-h-screen bg-white px-4 py-6">
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center space-x-3">
-          <Button variant="ghost" onClick={onBack} className="p-2">
-            <ArrowLeft className="w-5 h-5" />
+          <Button variant="ghost" onClick={onBack} className="p-2 hover:bg-gray-50">
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
           </Button>
-          <h2 className="text-xl font-bold text-gray-800">Find Your Perfect Meal</h2>
+          <h2 className="text-lg font-medium text-gray-800">Find Your Meal</h2>
         </div>
 
         {/* Search Input */}
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              🎯 What are you craving?
+            <h3 className="text-lg font-medium text-gray-800 mb-2">
+              What are you craving?
             </h3>
-            <p className="text-gray-600 text-sm mb-4">
-              Describe what you want and we'll find perfect matches from our partner restaurants!
+            <p className="text-gray-500 text-sm mb-4">
+              Describe what you want and we'll find perfect matches
             </p>
           </div>
           <div className="relative">
@@ -98,13 +98,13 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="pr-12 h-12 text-base"
+              className="pr-12 h-12 text-base border-gray-200 focus:border-gray-300"
             />
             <Button
               onClick={searchMealsWithSupabase}
               disabled={isLoading || !query.trim()}
               size="sm"
-              className="absolute right-2 top-2 h-8 w-8 p-0"
+              className="absolute right-2 top-2 h-8 w-8 p-0 bg-gray-800 hover:bg-gray-700"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -118,31 +118,31 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-8">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-orange-500" />
-            <p className="text-gray-600">Finding perfect matches for you...</p>
+            <Loader2 className="w-6 h-6 animate-spin mx-auto mb-4 text-gray-600" />
+            <p className="text-gray-500 text-sm">Finding perfect matches for you...</p>
           </div>
         )}
 
         {/* Results */}
         {meals.length > 0 && !isLoading && (
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800">
+            <h3 className="text-base font-medium text-gray-700">
               Perfect matches for "{query}"
             </h3>
             {meals.map((meal, index) => (
-              <Card key={meal.id || index} className="p-4 border-2 border-green-200 hover:border-green-300 transition-colors cursor-pointer">
+              <Card key={meal.id || index} className="p-4 border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="text-2xl">{meal.emoji}</div>
+                    <div className="text-xl">{meal.emoji}</div>
                     <div>
-                      <h4 className="font-bold text-gray-800">{meal.name}</h4>
+                      <h4 className="font-medium text-gray-800">{meal.name}</h4>
                       <p className="text-sm text-gray-600">{meal.restaurant}</p>
                       <p className="text-xs text-gray-500 mt-1">{meal.description}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-green-600 font-bold text-sm">{meal.price}</div>
-                    <div className="text-gray-600 text-sm">{meal.deliveryTime}</div>
+                    <div className="text-gray-800 font-medium text-sm">{meal.price}</div>
+                    <div className="text-gray-500 text-sm">{meal.deliveryTime}</div>
                   </div>
                 </div>
               </Card>
@@ -156,11 +156,11 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
                   setHasSearched(false);
                 }}
                 variant="outline" 
-                className="flex-1"
+                className="flex-1 border-gray-200 hover:bg-gray-50"
               >
                 New Search
               </Button>
-              <Button className="flex-1 bg-green-500 hover:bg-green-600">
+              <Button className="flex-1 bg-gray-800 hover:bg-gray-700">
                 Order Now
               </Button>
             </div>
@@ -170,8 +170,7 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
         {/* No results state */}
         {hasSearched && meals.length === 0 && !isLoading && (
           <div className="text-center py-8">
-            <div className="text-4xl mb-4">😔</div>
-            <p className="text-gray-600">No matches found. Try describing what you're craving differently!</p>
+            <p className="text-gray-500 text-sm">No matches found. Try describing what you're craving differently!</p>
           </div>
         )}
       </div>
