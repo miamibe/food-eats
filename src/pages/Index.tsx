@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { User, Search, Grid2x2, List, Send } from "lucide-react";
+import { User, Search, Grid2x2, List, Send, Plus } from "lucide-react";
 import QuickGames from "@/components/QuickGames";
 import QuizFlow from "@/components/QuizFlow";
 import RandomPick from "@/components/RandomPick";
@@ -44,19 +44,14 @@ const Index = () => {
               <QuickGames onMoodMatcherClick={handleMoodMatcherClick} />
             </div>
 
-            {/* Main Search Input */}
-            <div className="space-y-4">
-              <MealSearch onBack={() => setActiveView("home")} isInline={true} />
-            </div>
-
-            {/* Search Bar */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search for food or restaurants..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent"
-              />
+            {/* Welcome Message */}
+            <div className="text-center py-8">
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                What are you craving? 🍽️
+              </h3>
+              <p className="text-gray-600">
+                Use the search button below to tell us what you want
+              </p>
             </div>
           </div>
         );
@@ -64,7 +59,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50 relative">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100 px-4 py-4">
         <div className="flex items-center justify-between max-w-md mx-auto">
@@ -81,9 +76,22 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="px-4 py-6 max-w-md mx-auto">
+      <main className="px-4 py-6 max-w-md mx-auto pb-24">
         {renderMainContent()}
       </main>
+
+      {/* Floating Action Button */}
+      {activeView === "home" && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+          <Button
+            onClick={() => setActiveView("search")}
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl transition-all duration-200"
+            size="icon"
+          >
+            <Search className="w-6 h-6 text-white" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
