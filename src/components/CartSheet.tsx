@@ -28,58 +28,62 @@ export function CartSheet() {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
+      <SheetContent className="flex flex-col h-full w-full sm:max-w-lg">
+        <SheetHeader className="flex-shrink-0">
           <SheetTitle>Your Cart</SheetTitle>
         </SheetHeader>
-        <div className="mt-8">
+        <div className="flex flex-col flex-1 overflow-hidden">
           {state.items.length === 0 ? (
-            <div className="text-center text-gray-500">
+            <div className="flex-1 flex items-center justify-center text-center text-gray-500">
               Your cart is empty
             </div>
           ) : (
-            <div className="space-y-4">
-              {state.items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between py-4 border-b">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xl">{item.emoji}</span>
-                      <div>
-                        <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-sm text-gray-500">{item.restaurant}</p>
+            <div className="flex flex-col h-full">
+              <div className="flex-1 overflow-y-auto py-6">
+                <div className="space-y-4">
+                  {state.items.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between py-4 border-b">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xl">{item.emoji}</span>
+                          <div>
+                            <h3 className="font-medium">{item.name}</h3>
+                            <p className="text-sm text-gray-500">{item.restaurant}</p>
+                          </div>
+                        </div>
+                        <div className="mt-1 text-sm font-medium">
+                          {formatCurrency(item.price)}
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        >
+                          {item.quantity === 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+                        </Button>
+                        <span className="w-8 text-center">{item.quantity}</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                    <div className="mt-1 text-sm font-medium">
-                      {formatCurrency(item.price)}
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    >
-                      {item.quantity === 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
-                    </Button>
-                    <span className="w-8 text-center">{item.quantity}</span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  ))}
                 </div>
-              ))}
-              <div className="pt-4">
-                <div className="flex justify-between text-lg font-medium">
+              </div>
+              <div className="border-t pt-4 mt-auto">
+                <div className="flex justify-between text-lg font-medium mb-4">
                   <span>Total</span>
                   <span>{formatCurrency(state.total)}</span>
                 </div>
-                <Button className="w-full mt-4" size="lg">
+                <Button className="w-full" size="lg">
                   Checkout
                 </Button>
               </div>
