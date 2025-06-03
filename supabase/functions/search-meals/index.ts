@@ -2,6 +2,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+interface SearchResult {
+  id: any;
+  name: any;
+  restaurant: any;
+  price: string;
+  deliveryTime: string;
+  emoji: any;
+  description: any;
+  category: any;
+  relevance_score: any;
+  match_explanation: any;
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -165,7 +178,7 @@ Be generous with semantic matching - if a "thick soup" exists for a "hearty" que
       }
 
       // Map back to actual meal objects
-      const results = [];
+      const results: SearchResult[] = [];
       for (const match of matches) {
         const mealIndex = match.meal_number - 1; // Convert to 0-based index
         if (mealIndex >= 0 && mealIndex < meals.length) {
