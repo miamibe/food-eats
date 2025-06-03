@@ -16,6 +16,7 @@ export type Database = {
           description: string | null
           emoji: string | null
           id: string
+          image_url: string | null
           is_available: boolean | null
           name: string
           preparation_time: number | null
@@ -29,6 +30,7 @@ export type Database = {
           description?: string | null
           emoji?: string | null
           id?: string
+          image_url?: string | null
           is_available?: boolean | null
           name: string
           preparation_time?: number | null
@@ -42,6 +44,7 @@ export type Database = {
           description?: string | null
           emoji?: string | null
           id?: string
+          image_url?: string | null
           is_available?: boolean | null
           name?: string
           preparation_time?: number | null
