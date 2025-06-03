@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Loader2, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCart, addToCart } from "@/lib/cart";
+import MealCard from "@/components/MealCard";
 
 interface Restaurant {
   id: string;
@@ -40,7 +41,7 @@ interface CountryInfo {
   dishes: string[];
 }
 
-const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
+const CuisineAdventureMap: React.FC<CuisineAdventureMapProps> = ({ onBack }) => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -289,27 +290,18 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
               ) : similarMeals.length > 0 ? (
                 <div className="space-y-2">
                   {similarMeals.map((meal) => (
-                    <Card 
-                      key={meal.id} 
-                      className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => handleAddToCart(meal)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xl">{meal.emoji}</span>
-                            <div>
-                              <h5 className="font-medium text-gray-800">{meal.name}</h5>
-                              <p className="text-sm text-gray-600">{meal.restaurant}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-gray-800">{meal.price}</p>
-                          <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
-                        </div>
-                      </div>
-                    </Card>
+                    <MealCard
+                      key={meal.id}
+                      id={meal.id}
+                      name={meal.name}
+                      restaurant={meal.restaurant}
+                      price={meal.price}
+                      deliveryTime={meal.deliveryTime}
+                      emoji={meal.emoji}
+                      description={meal.description}
+                      match_explanation={meal.match_explanation}
+                      className="mb-2"
+                    />
                   ))}
                 </div>
               ) : (

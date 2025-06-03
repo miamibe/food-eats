@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import MealCard from "@/components/MealCard";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart, addToCart } from "@/lib/cart";
@@ -190,30 +190,18 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
           <div className="space-y-4">
             <div className="space-y-2">
               {recommendations.map((meal) => (
-                <Card 
-                  key={meal.id} 
-                  className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => handleAddToCart(meal)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xl">{meal.emoji}</span>
-                        <div>
-                          <h4 className="font-medium text-gray-800">{meal.name}</h4>
-                          <p className="text-sm text-gray-600">{meal.restaurant}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-gray-800">{meal.price}</p>
-                      <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
-                    </div>
-                  </div>
-                  {meal.match_explanation && (
-                    <p className="mt-2 text-sm text-gray-600">{meal.match_explanation}</p>
-                  )}
-                </Card>
+                <MealCard
+                  key={meal.id}
+                  id={meal.id}
+                  name={meal.name}
+                  restaurant={meal.restaurant}
+                  price={meal.price}
+                  deliveryTime={meal.deliveryTime}
+                  emoji={meal.emoji}
+                  description={meal.description}
+                  match_explanation={meal.match_explanation}
+                  className="mb-2"
+                />
               ))}
             </div>
 
