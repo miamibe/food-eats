@@ -1,6 +1,6 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { formatCurrency } from "@/lib/utils";
 
@@ -30,9 +30,16 @@ export function CartSheet() {
       </SheetTrigger>
       <SheetContent className="flex flex-col p-0 w-full sm:max-w-lg">
         <div className="sticky top-0 bg-white border-b z-10 px-6 py-4">
-          <SheetHeader>
-            <SheetTitle>Your Cart</SheetTitle>
-          </SheetHeader>
+          <div className="flex items-center justify-between">
+            <SheetHeader className="flex-1">
+              <SheetTitle>Your Cart</SheetTitle>
+            </SheetHeader>
+            <SheetClose asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <X className="h-4 w-4" />
+              </Button>
+            </SheetClose>
+          </div>
         </div>
         
         <div className="flex-1 overflow-y-auto">
