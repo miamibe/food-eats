@@ -205,10 +205,12 @@ Examples:
       );
     }
 
-    if (!meals || meals.length === 0) {
+    let allMeals = meals || [];
+
+    if (!allMeals || allMeals.length === 0) {
       console.log('No meals found in database, trying broader search...');
       // Try a completely open search if no results
-      const { data: allMeals, error: allMealsError } = await supabase
+      const { data: fallbackMeals, error: allMealsError } = await supabase
         .from('meals')
         .select(`
           *,
@@ -221,23 +223,22 @@ Examples:
         .eq('is_available', true)
         .limit(30);
 
-      if (allMealsError || !allMeals || allMeals.length === 0) {
+      if (allMealsError || !fallbackMeals || fallbackMeals.length === 0) {
         return new Response(
           JSON.stringify({ meals: [] }),
           { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
-      console.log(`Found ${allMeals.length} meals for AI ranking`);
-      // Use all meals for AI ranking
-      meals.push(...allMeals);
+      allMeals = fallbackMeals;
+      console.log(`Found ${allMeals.length} meals using fallback search`);
     }
 
-    console.log(`Found ${meals.length} meals from database`);
+    console.log(`Found ${allMeals.length} meals from database`);
 
     // STEP 4: Rerank results using Groq
     console.log('Step 4: Reranking results...');
-    const mealsText = meals.map((meal, index) => 
+    const mealsText = allMeals.map((meal, index) => 
       `${index + 1}. ${meal.name} (${meal.restaurants?.name}) - ${meal.description} - $${meal.price} - ${meal.category || 'main'}`
     ).join('\n');
 
@@ -252,39 +253,54 @@ ${mealsText}
 
 Return only the numbers in order of relevance (e.g., "3,1,7,2,5,4,6,8,9,10"):`;
 
-    const rerankResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${cleanApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama3-8b-8192',
-        messages: [{ role: 'user', content: rerankPrompt }],
-        temperature: 0.1,
-        max_tokens: 200,
-      }),
-    });
+    let rankedMeals = allMeals.slice(0, 10); // Default to first 10 if reranking fails
 
-    let rankedMeals = meals;
-    if (rerankResponse.ok) {
-      const rerankData = await rerankResponse.json();
-      const rerankContent = rerankData.choices[0]?.message?.content;
-      
-      try {
-        const rankings = rerankContent.split(',').map((num: string) => parseInt(num.trim()) - 1);
-        rankedMeals = rankings
-          .filter(index => index >= 0 && index < meals.length)
-          .map(index => meals[index])
-          .slice(0, 10); // Top 10 results
-        console.log('Successfully reranked meals');
-      } catch (rerankError) {
-        console.error('Failed to parse rerank response, using original order');
-        rankedMeals = meals.slice(0, 10);
+    try {
+      const rerankResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${cleanApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama3-8b-8192',
+          messages: [{ role: 'user', content: rerankPrompt }],
+          temperature: 0.1,
+          max_tokens: 200,
+        }),
+      });
+
+      if (rerankResponse.ok) {
+        const rerankData = await rerankResponse.json();
+        const rerankContent = rerankData.choices[0]?.message?.content;
+        
+        try {
+          // Parse the ranking response more carefully
+          const cleanRanking = rerankContent.replace(/[^\d,]/g, ''); // Remove all non-digit, non-comma characters
+          const rankings = cleanRanking.split(',').map((num: string) => {
+            const parsed = parseInt(num.trim());
+            return parsed - 1; // Convert to 0-based index
+          }).filter(index => index >= 0 && index < allMeals.length); // Only keep valid indices
+          
+          if (rankings.length > 0) {
+            rankedMeals = rankings
+              .map(index => allMeals[index])
+              .filter(meal => meal) // Remove any undefined meals
+              .slice(0, 10); // Top 10 results
+            console.log(`Successfully reranked ${rankedMeals.length} meals`);
+          } else {
+            console.log('No valid rankings found, using original order');
+          }
+        } catch (rerankError) {
+          console.error('Failed to parse rerank response:', rerankContent);
+          console.log('Using original order as fallback');
+        }
+      } else {
+        console.error('Rerank request failed, using original order');
       }
-    } else {
-      console.error('Rerank request failed, using original order');
-      rankedMeals = meals.slice(0, 10);
+    } catch (rerankError) {
+      console.error('Rerank request error:', rerankError);
+      console.log('Using original order as fallback');
     }
 
     // STEP 5: Format final results
