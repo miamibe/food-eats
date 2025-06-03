@@ -1,12 +1,10 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Clock, DollarSign, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface CuisineAdventureMapProps {
   onBack: () => void;
@@ -27,30 +25,20 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [mapboxToken, setMapboxToken] = useState("");
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<mapboxgl.Marker[]>([]);
 
-  // Mock coordinates for restaurants (in a real app, these would be in the database)
-  const restaurantLocations = [
-    { id: "1", lat: 40.7128, lng: -74.0060 }, // New York
-    { id: "2", lat: 34.0522, lng: -118.2437 }, // Los Angeles
-    { id: "3", lat: 41.8781, lng: -87.6298 }, // Chicago
-    { id: "4", lat: 29.7604, lng: -95.3698 }, // Houston
-    { id: "5", lat: 33.4484, lng: -112.0740 }, // Phoenix
-    { id: "6", lat: 39.9526, lng: -75.1652 }, // Philadelphia
+  // Mock coordinates for restaurants positioned on the illustrated map
+  const restaurantPositions = [
+    { id: "1", top: "45%", left: "20%" }, // Europe
+    { id: "2", top: "55%", left: "15%" }, // Europe
+    { id: "3", top: "35%", left: "75%" }, // Asia
+    { id: "4", top: "25%", left: "70%" }, // Asia
+    { id: "5", top: "40%", left: "12%" }, // North America
+    { id: "6", top: "65%", left: "25%" }, // Africa
   ];
 
   useEffect(() => {
     fetchRestaurants();
   }, []);
-
-  useEffect(() => {
-    if (mapboxToken && restaurants.length > 0) {
-      initializeMap();
-    }
-  }, [mapboxToken, restaurants]);
 
   const fetchRestaurants = async () => {
     try {
@@ -136,66 +124,6 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     }
   };
 
-  const initializeMap = () => {
-    if (!mapContainer.current || !mapboxToken) return;
-
-    mapboxgl.accessToken = mapboxToken;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-95.7129, 37.0902], // Center of USA
-      zoom: 3
-    });
-
-    // Add markers for restaurants
-    restaurants.forEach((restaurant, index) => {
-      const location = restaurantLocations[index];
-      if (location && restaurant.id === location.id) {
-        // Create a custom marker element
-        const markerElement = document.createElement('div');
-        markerElement.className = 'restaurant-marker';
-        markerElement.style.cssText = `
-          width: 40px;
-          height: 40px;
-          background-color: #ef4444;
-          border: 3px solid white;
-          border-radius: 50%;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-          transition: transform 0.2s;
-        `;
-        markerElement.innerHTML = '🍽️';
-        
-        markerElement.addEventListener('mouseenter', () => {
-          markerElement.style.transform = 'scale(1.1)';
-        });
-        
-        markerElement.addEventListener('mouseleave', () => {
-          markerElement.style.transform = 'scale(1)';
-        });
-
-        const marker = new mapboxgl.Marker(markerElement)
-          .setLngLat([location.lng, location.lat])
-          .addTo(map.current!);
-
-        // Add click event to marker
-        markerElement.addEventListener('click', () => {
-          setSelectedRestaurant(restaurant);
-        });
-
-        markers.current.push(marker);
-      }
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-  };
-
   const formatDeliveryTime = (min: number, max: number) => {
     if (min === max) return `${min} min`;
     return `${min}-${max} min`;
@@ -232,85 +160,129 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
         <div className="space-y-4">
           <div className="text-center space-y-2">
             <h3 className="text-lg font-medium text-gray-700">
-              🗺️ Discover Local Restaurants
+              🗺️ Discover Global Cuisines
             </h3>
             <p className="text-sm text-gray-500">
-              Click on restaurant markers to explore delicious dishes available for delivery!
+              Tap on restaurant markers around the world to explore delicious dishes!
             </p>
           </div>
 
-          {/* Mapbox Token Input */}
-          {!mapboxToken && (
-            <Card className="p-4 bg-blue-50 border-blue-200">
-              <div className="space-y-3">
-                <h4 className="font-medium text-blue-800">Setup Required</h4>
-                <p className="text-sm text-blue-700">
-                  Enter your Mapbox public token to view the interactive map. 
-                  Get one free at <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="underline">mapbox.com</a>
-                </p>
-                <div className="flex space-x-2">
-                  <input
-                    type="text"
-                    placeholder="pk.eyJ1IjoieW91ci11c2VybmFtZSIsImEiOiJjbGV..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    onChange={(e) => setMapboxToken(e.target.value)}
-                  />
-                  <Button 
-                    onClick={() => mapboxToken && initializeMap()}
-                    disabled={!mapboxToken}
-                    size="sm"
-                  >
-                    Load Map
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          )}
+          {/* Illustrated World Map */}
+          <div className="relative bg-gradient-to-b from-blue-100 to-green-100 rounded-xl h-80 overflow-hidden border-2 border-gray-200">
+            {/* World Map Illustration */}
+            <svg 
+              viewBox="0 0 400 200" 
+              className="absolute inset-0 w-full h-full"
+              style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.1))' }}
+            >
+              {/* Continents */}
+              {/* North America */}
+              <path 
+                d="M20 40 L80 35 L85 50 L90 70 L85 80 L75 85 L60 80 L45 75 L25 65 Z" 
+                fill="#86efac" 
+                stroke="#22c55e" 
+                strokeWidth="1"
+              />
+              {/* South America */}
+              <path 
+                d="M70 100 L85 95 L90 120 L85 150 L75 155 L65 150 L60 130 L65 110 Z" 
+                fill="#86efac" 
+                stroke="#22c55e" 
+                strokeWidth="1"
+              />
+              {/* Europe */}
+              <path 
+                d="M140 30 L180 35 L185 50 L175 60 L160 55 L145 50 Z" 
+                fill="#86efac" 
+                stroke="#22c55e" 
+                strokeWidth="1"
+              />
+              {/* Africa */}
+              <path 
+                d="M150 70 L190 75 L195 120 L185 140 L170 145 L155 140 L145 120 L148 90 Z" 
+                fill="#86efac" 
+                stroke="#22c55e" 
+                strokeWidth="1"
+              />
+              {/* Asia */}
+              <path 
+                d="M200 25 L320 30 L340 45 L345 70 L335 85 L310 90 L280 85 L250 80 L220 75 L205 60 L195 45 Z" 
+                fill="#86efac" 
+                stroke="#22c55e" 
+                strokeWidth="1"
+              />
+              {/* Australia */}
+              <path 
+                d="M290 140 L330 145 L335 160 L320 165 L295 160 Z" 
+                fill="#86efac" 
+                stroke="#22c55e" 
+                strokeWidth="1"
+              />
+            </svg>
 
-          {/* Map Container */}
-          {mapboxToken && (
-            <div className="relative bg-gray-100 rounded-xl h-80 overflow-hidden border-2 border-gray-200">
-              <div ref={mapContainer} className="absolute inset-0" />
-            </div>
-          )}
+            {/* Restaurant Markers */}
+            {restaurants.map((restaurant, index) => {
+              const position = restaurantPositions[index];
+              if (!position || restaurant.id !== position.id) return null;
 
-          {/* Restaurant Grid (fallback when no map) */}
-          {!mapboxToken && (
-            <div className="grid grid-cols-2 gap-3">
-              {restaurants.map((restaurant) => (
-                <Card 
-                  key={restaurant.id} 
-                  className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+              return (
+                <button
+                  key={restaurant.id}
                   onClick={() => setSelectedRestaurant(restaurant)}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-red-500 border-3 border-white rounded-full cursor-pointer flex items-center justify-center text-white font-bold shadow-lg hover:scale-110 transition-transform z-10"
+                  style={{ 
+                    top: position.top, 
+                    left: position.left,
+                    animation: `pulse 2s infinite ${index * 0.3}s`
+                  }}
                 >
-                  <div className="aspect-square bg-gray-100">
-                    <img
-                      src={restaurant.image_url}
-                      alt={restaurant.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop';
-                      }}
-                    />
+                  🍽️
+                </button>
+              );
+            })}
+
+            {/* Decorative elements */}
+            <div className="absolute top-4 right-4 text-2xl animate-bounce">☀️</div>
+            <div className="absolute bottom-4 left-4 text-xl animate-pulse">🌊</div>
+            <div className="absolute top-1/3 left-1/3 text-lg animate-pulse opacity-70">⛵</div>
+            <div className="absolute bottom-1/3 right-1/4 text-lg animate-pulse opacity-70">✈️</div>
+          </div>
+
+          {/* Restaurant Grid (fallback) */}
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            {restaurants.map((restaurant) => (
+              <Card 
+                key={restaurant.id} 
+                className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => setSelectedRestaurant(restaurant)}
+              >
+                <div className="aspect-square bg-gray-100">
+                  <img
+                    src={restaurant.image_url}
+                    alt={restaurant.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop';
+                    }}
+                  />
+                </div>
+                <div className="p-3">
+                  <h4 className="text-sm font-medium text-gray-800 mb-1">{restaurant.name}</h4>
+                  <div className="flex items-center justify-between text-xs text-gray-600">
+                    <span>{restaurant.cuisine_type}</span>
+                    <span>{formatDeliveryTime(restaurant.delivery_time_min, restaurant.delivery_time_max)}</span>
                   </div>
-                  <div className="p-3">
-                    <h4 className="text-sm font-medium text-gray-800 mb-1">{restaurant.name}</h4>
-                    <div className="flex items-center justify-between text-xs text-gray-600">
-                      <span>{restaurant.cuisine_type}</span>
-                      <span>{formatDeliveryTime(restaurant.delivery_time_min, restaurant.delivery_time_max)}</span>
+                  {restaurant.rating && (
+                    <div className="flex items-center mt-1">
+                      <span className="text-yellow-500 text-xs">★</span>
+                      <span className="text-xs text-gray-600 ml-1">{restaurant.rating}</span>
                     </div>
-                    {restaurant.rating && (
-                      <div className="flex items-center mt-1">
-                        <span className="text-yellow-500 text-xs">★</span>
-                        <span className="text-xs text-gray-600 ml-1">{restaurant.rating}</span>
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -363,6 +335,13 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
           </Card>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); }
+          50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+      `}</style>
     </div>
   );
 };
