@@ -17,13 +17,13 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
           <Button
             variant="outline"
             onClick={onMoodMatcherClick}
-            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group transition-transform hover:scale-105"
+            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-sm group transition-transform hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, rgb(147, 197, 253), rgb(167, 139, 250))"
+              background: "linear-gradient(135deg, rgb(191, 219, 254), rgb(199, 181, 255))"
             }}
           >
-            <Brain className="w-8 h-8 text-white relative z-10" />
-            <span className="text-sm text-white font-medium relative z-10">Mood</span>
+            <Brain className="w-8 h-8 text-white/90 relative z-10" />
+            <span className="text-sm text-white/90 font-medium relative z-10">Mood</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
@@ -36,13 +36,13 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
           <Button
             variant="outline"
             onClick={onCuisineMapClick}
-            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group transition-transform hover:scale-105"
+            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-sm group transition-transform hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, rgb(110, 231, 183), rgb(16, 185, 129))"
+              background: "linear-gradient(135deg, rgb(167, 243, 208), rgb(52, 211, 153))"
             }}
           >
-            <MapPin className="w-8 h-8 text-white relative z-10" />
-            <span className="text-sm text-white font-medium relative z-10">Map</span>
+            <MapPin className="w-8 h-8 text-white/90 relative z-10" />
+            <span className="text-sm text-white/90 font-medium relative z-10">Map</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
@@ -55,13 +55,13 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
           <Button
             variant="outline"
             onClick={onGameClick}
-            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group transition-transform hover:scale-105"
+            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-sm group transition-transform hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, rgb(192, 132, 252), rgb(244, 114, 182))"
+              background: "linear-gradient(135deg, rgb(216, 180, 254), rgb(251, 146, 220))"
             }}
           >
-            <Gamepad2 className="w-8 h-8 text-white relative z-10" />
-            <span className="text-sm text-white font-medium relative z-10">Game</span>
+            <Gamepad2 className="w-8 h-8 text-white/90 relative z-10" />
+            <span className="text-sm text-white/90 font-medium relative z-10">Game</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
@@ -74,13 +74,13 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
           <Button
             variant="outline"
             onClick={onTrendBitesClick}
-            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group transition-transform hover:scale-105"
+            className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-sm group transition-transform hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, rgb(251, 146, 60), rgb(239, 68, 68))"
+              background: "linear-gradient(135deg, rgb(253, 186, 140), rgb(248, 113, 113))"
             }}
           >
-            <TrendingUp className="w-8 h-8 text-white relative z-10" />
-            <span className="text-sm text-white font-medium relative z-10">Trends</span>
+            <TrendingUp className="w-8 h-8 text-white/90 relative z-10" />
+            <span className="text-sm text-white/90 font-medium relative z-10">Trends</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
