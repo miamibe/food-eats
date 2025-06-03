@@ -165,7 +165,7 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
-          <Button variant="ghost" onClick={onBack} className="p-2">
+          <Button variant="ghost\" onClick={onBack} className="p-2">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h2 className="text-xl font-bold text-gray-800">Your Perfect Matches!</h2>
