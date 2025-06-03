@@ -1,27 +1,45 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, TrendingUp, Star, Clock, MapPin } from "lucide-react";
+import { ArrowLeft, TrendingUp, Star, Clock, MapPin, Loader2 } from "lucide-react";
 
 interface TrendBitesProps {
   onBack: () => void;
 }
 
+interface SimilarMeal {
+  id: string;
+  name: string;
+  restaurant: string;
+  price: string;
+  deliveryTime: string;
+  emoji: string;
+  description: string;
+  relevance_score: number;
+  match_explanation?: string;
+}
+
+interface TrendingDish {
+  name: string;
+  description: string;
+  origin: string;
+  trendScore: number;
+  emoji: string;
+  popularityReason: string;
+  funFact: string;
+}
+
 const TrendBites = ({ onBack }: TrendBitesProps) => {
   const [currentTrend, setCurrentTrend] = useState(0);
+  const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
+  const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
 
-  const trendingDishes = [
+  const trendingDishes: TrendingDish[] = [
     {
       name: "Korean Corn Dogs",
       description: "Crispy, cheesy Korean-style hot dogs coated in potato cubes and panko breadcrumbs",
       origin: "South Korea 🇰🇷",
       trendScore: 98,
-      restaurants: [
-        { name: "K-Street Food", price: "$8.99", time: "15 min", rating: 4.8 },
-        { name: "Seoul Kitchen", price: "$9.50", time: "20 min", rating: 4.7 },
-        { name: "Kimchi Corner", price: "$7.99", time: "18 min", rating: 4.6 }
-      ],
       emoji: "🌭",
       popularityReason: "Viral on TikTok with over 50M views this month",
       funFact: "Originally called 'hotteok' style corn dogs, they're stuffed with mozzarella and coated in cubed potatoes!"
@@ -31,11 +49,6 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
       description: "Slow-cooked beef in rich, spiced broth served with crispy tortillas and consommé for dipping",
       origin: "Mexico 🇲🇽",
       trendScore: 95,
-      restaurants: [
-        { name: "Birrieria Los Primos", price: "$12.99", time: "25 min", rating: 4.9 },
-        { name: "Taco Libre", price: "$11.50", time: "22 min", rating: 4.7 },
-        { name: "El Consommé", price: "$13.50", time: "30 min", rating: 4.8 }
-      ],
       emoji: "🌮",
       popularityReason: "Featured in major food festivals and celebrity chef endorsements",
       funFact: "Traditionally eaten at celebrations, now the most requested taco variety in the US!"
@@ -45,11 +58,6 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
       description: "Whipped coffee cream over milk transformed into various dessert forms",
       origin: "South Korea 🇰🇷",
       trendScore: 92,
-      restaurants: [
-        { name: "Cloud Nine Café", price: "$6.99", time: "12 min", rating: 4.6 },
-        { name: "Whipped Dreams", price: "$7.50", time: "15 min", rating: 4.5 },
-        { name: "Seoul Sweets", price: "$5.99", time: "10 min", rating: 4.7 }
-      ],
       emoji: "☕",
       popularityReason: "Pandemic home-cooking trend that evolved into restaurant specialty",
       funFact: "Named after Korean sponge toffee candy, it became the most searched recipe in 2020!"
@@ -59,11 +67,6 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
       description: "Ultra-thin beef patties smashed on hot griddle for maximum crispy edges and flavor",
       origin: "United States 🇺🇸",
       trendScore: 89,
-      restaurants: [
-        { name: "Smash & Grab", price: "$14.99", time: "18 min", rating: 4.8 },
-        { name: "Crispy Edge", price: "$13.50", time: "20 min", rating: 4.6 },
-        { name: "The Griddle", price: "$15.99", time: "22 min", rating: 4.7 }
-      ],
       emoji: "🍔",
       popularityReason: "Championed by burger purists and food influencers for superior taste",
       funFact: "The technique creates 40% more surface area for the Maillard reaction!"
@@ -73,29 +76,43 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
       description: "Purple yam from the Philippines featured in ice cream, pastries, and bubble tea",
       origin: "Philippines 🇵🇭",
       trendScore: 87,
-      restaurants: [
-        { name: "Purple Paradise", price: "$8.99", time: "15 min", rating: 4.5 },
-        { name: "Manila Treats", price: "$9.50", time: "18 min", rating: 4.6 },
-        { name: "Yam Yam Café", price: "$7.99", time: "12 min", rating: 4.4 }
-      ],
       emoji: "🍠",
       popularityReason: "Instagram-worthy purple color driving social media engagement",
       funFact: "Ube has a nutty, vanilla-like flavor and is packed with antioxidants!"
     }
   ];
 
-  const nextTrend = () => {
-    setCurrentTrend((prev) => (prev + 1) % trendingDishes.length);
-  };
+  const fetchSimilarMeals = async (description: string) => {
+    setIsLoadingSimilar(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-meals`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: description }),
+      });
 
-  const prevTrend = () => {
-    setCurrentTrend((prev) => (prev - 1 + trendingDishes.length) % trendingDishes.length);
+      if (!response.ok) {
+        throw new Error('Failed to fetch similar meals');
+      }
+
+      const data = await response.json();
+      setSimilarMeals(data.meals || []);
+    } catch (error) {
+      console.error('Error fetching similar meals:', error);
+    } finally {
+      setIsLoadingSimilar(false);
+    }
   };
 
   useEffect(() => {
-    const interval = setInterval(nextTrend, 10000); // Auto-advance every 10 seconds
-    return () => clearInterval(interval);
-  }, []);
+    // Fetch similar meals when current trend changes
+    const dish = trendingDishes[currentTrend];
+    const searchQuery = `${dish.name} ${dish.description} ${dish.origin.split(' ')[0]} cuisine`;
+    fetchSimilarMeals(searchQuery);
+  }, [currentTrend]);
 
   const dish = trendingDishes[currentTrend];
 
@@ -150,43 +167,64 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
           <p className="text-sm text-gray-700">{dish.funFact}</p>
         </Card>
 
-        {/* Available Restaurants */}
+        {/* Available Near You */}
         <div className="space-y-3">
           <h4 className="font-semibold text-gray-800 flex items-center">
             <MapPin className="w-4 h-4 mr-2" />
             Available Near You
           </h4>
-          {dish.restaurants.map((restaurant, index) => (
-            <Card key={index} className="p-3 border border-gray-200 hover:border-gray-300 transition-colors">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h5 className="font-medium text-gray-800">{restaurant.name}</h5>
-                  <div className="flex items-center space-x-3 text-sm text-gray-600">
-                    <span className="font-bold text-green-600">{restaurant.price}</span>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{restaurant.time}</span>
+          
+          {isLoadingSimilar ? (
+            <div className="text-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto mb-4 text-gray-600" />
+              <p className="text-gray-500 text-sm">Finding similar dishes...</p>
+            </div>
+          ) : similarMeals.length > 0 ? (
+            similarMeals.map((restaurant) => (
+              <Card key={restaurant.id} className="p-3 border border-gray-200 hover:border-gray-300 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h5 className="font-medium text-gray-800">{restaurant.name}</h5>
+                    <div className="flex items-center space-x-3 text-sm text-gray-600">
+                      <span className="font-bold text-green-600">{restaurant.price}</span>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{restaurant.deliveryTime}</span>
+                      </div>
                     </div>
+                    {restaurant.match_explanation && (
+                      <p className="text-xs text-gray-500 mt-1">{restaurant.match_explanation}</p>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-1 text-yellow-500">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-sm font-medium text-gray-700">{restaurant.relevance_score.toFixed(1)}</span>
                   </div>
                 </div>
-                <div className="flex items-center space-x-1 text-yellow-500">
-                  <Star className="w-4 h-4 fill-current" />
-                  <span className="text-sm font-medium text-gray-700">{restaurant.rating}</span>
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 py-4">No similar dishes found nearby</p>
+          )}
         </div>
 
         {/* Navigation */}
         <div className="flex justify-between items-center pt-4">
-          <Button onClick={prevTrend} variant="outline" className="flex-1 mr-2">
+          <Button 
+            onClick={() => setCurrentTrend((prev) => (prev - 1 + trendingDishes.length) % trendingDishes.length)} 
+            variant="outline" 
+            className="flex-1 mr-2"
+          >
             ← Previous Trend
           </Button>
           <div className="text-sm text-gray-500 px-4">
             {currentTrend + 1} of {trendingDishes.length}
           </div>
-          <Button onClick={nextTrend} variant="outline" className="flex-1 ml-2">
+          <Button 
+            onClick={() => setCurrentTrend((prev) => (prev + 1) % trendingDishes.length)} 
+            variant="outline" 
+            className="flex-1 ml-2"
+          >
             Next Trend →
           </Button>
         </div>
