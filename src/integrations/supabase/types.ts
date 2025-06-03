@@ -9,7 +9,98 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      meals: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          emoji: string | null
+          id: string
+          is_available: boolean | null
+          name: string
+          preparation_time: number | null
+          price: number
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_available?: boolean | null
+          name: string
+          preparation_time?: number | null
+          price: number
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_available?: boolean | null
+          name?: string
+          preparation_time?: number | null
+          price?: number
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meals_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurants: {
+        Row: {
+          created_at: string
+          cuisine_type: string | null
+          delivery_time_max: number | null
+          delivery_time_min: number | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          rating: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cuisine_type?: string | null
+          delivery_time_max?: number | null
+          delivery_time_min?: number | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          rating?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cuisine_type?: string | null
+          delivery_time_max?: number | null
+          delivery_time_min?: number | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          rating?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
