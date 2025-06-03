@@ -78,9 +78,13 @@ Return ONLY a valid JSON object with these fields (use null for missing criteria
     "price_preference": "budget|moderate|premium"
 }
 
+Important: Translate keywords to English if they are in other languages.
 Examples:
 "хочу что-то полезное - минимум углеводов, мясо овощи с экзотическим вкусом и хрустящее"
-→ {"keywords": ["полезное", "мясо", "овощи"], "dietary_restrictions": ["low_carb", "healthy"], "ingredients": ["meat", "vegetables"], "textures": ["crispy"], "flavors": ["exotic"], "categories": null, "exclude": null, "price_preference": null}`;
+→ {"keywords": ["healthy", "meat", "vegetables", "crispy"], "dietary_restrictions": ["low_carb", "healthy"], "ingredients": ["meat", "vegetables"], "textures": ["crispy"], "flavors": ["exotic"], "categories": null, "exclude": null, "price_preference": null}
+
+"легкое, хрустящее, с мясом, сытное, недорогое, возможно экзотическое, необычное"
+→ {"keywords": ["light", "crispy", "meat", "filling", "exotic"], "dietary_restrictions": null, "ingredients": ["meat"], "textures": ["crispy"], "flavors": ["exotic"], "categories": null, "exclude": null, "price_preference": "budget"}`;
 
     const extractionResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -141,18 +145,38 @@ Examples:
       `)
       .eq('is_available', true);
 
-    // Apply filters based on criteria
+    // Start with a broader search approach
+    let hasFilters = false;
+
+    // Apply filters based on criteria - make it more flexible
     if (criteria.keywords && criteria.keywords.length > 0) {
-      // Create individual OR conditions for each keyword
+      // Create broader search conditions
       const keywordConditions = criteria.keywords.map(keyword => {
         const cleanKeyword = keyword.replace(/[%_]/g, '\\$&'); // Escape SQL wildcards
         return `name.ilike.%${cleanKeyword}%,description.ilike.%${cleanKeyword}%,category.ilike.%${cleanKeyword}%`;
       }).join(',');
       dbQuery = dbQuery.or(keywordConditions);
+      hasFilters = true;
+    }
+
+    // Handle ingredients search
+    if (criteria.ingredients && criteria.ingredients.length > 0) {
+      const ingredientConditions = criteria.ingredients.map(ingredient => {
+        const cleanIngredient = ingredient.replace(/[%_]/g, '\\$&');
+        return `name.ilike.%${cleanIngredient}%,description.ilike.%${cleanIngredient}%`;
+      }).join(',');
+      if (hasFilters) {
+        // If we already have filters, make this an AND condition by creating a new query
+        dbQuery = dbQuery.or(ingredientConditions);
+      } else {
+        dbQuery = dbQuery.or(ingredientConditions);
+        hasFilters = true;
+      }
     }
 
     if (criteria.categories && criteria.categories.length > 0) {
       dbQuery = dbQuery.in('category', criteria.categories);
+      hasFilters = true;
     }
 
     // Price filtering
@@ -164,9 +188,14 @@ Examples:
       dbQuery = dbQuery.gte('price', 10).lte('price', 20);
     }
 
+    // If no specific filters were applied, get more meals to work with
+    if (!hasFilters) {
+      console.log('No specific filters applied, getting all available meals for AI ranking');
+    }
+
     // STEP 3: Execute database query
     console.log('Step 3: Executing database query...');
-    const { data: meals, error: mealsError } = await dbQuery.limit(20);
+    const { data: meals, error: mealsError } = await dbQuery.limit(50); // Increased limit for better selection
 
     if (mealsError) {
       console.error('Error fetching meals:', mealsError);
@@ -177,11 +206,31 @@ Examples:
     }
 
     if (!meals || meals.length === 0) {
-      console.log('No meals found in database');
-      return new Response(
-        JSON.stringify({ meals: [] }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      console.log('No meals found in database, trying broader search...');
+      // Try a completely open search if no results
+      const { data: allMeals, error: allMealsError } = await supabase
+        .from('meals')
+        .select(`
+          *,
+          restaurants (
+            name,
+            delivery_time_min,
+            delivery_time_max
+          )
+        `)
+        .eq('is_available', true)
+        .limit(30);
+
+      if (allMealsError || !allMeals || allMeals.length === 0) {
+        return new Response(
+          JSON.stringify({ meals: [] }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      console.log(`Found ${allMeals.length} meals for AI ranking`);
+      // Use all meals for AI ranking
+      meals.push(...allMeals);
     }
 
     console.log(`Found ${meals.length} meals from database`);
@@ -194,7 +243,11 @@ Examples:
 
     const rerankPrompt = `User query: "${query}"
 
-Rank these meals from most relevant to least relevant based on the user's request:
+Rank these meals from most relevant to least relevant based on the user's request. Consider:
+- User wants: light, crispy, with meat, filling, budget-friendly, possibly exotic/unusual
+- Look for dishes that match these criteria even if keywords don't exactly match
+
+Meals to rank:
 ${mealsText}
 
 Return only the numbers in order of relevance (e.g., "3,1,7,2,5,4,6,8,9,10"):`;
