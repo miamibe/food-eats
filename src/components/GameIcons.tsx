@@ -22,7 +22,7 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
             <div className="rounded-lg p-2 bg-gradient-to-br from-blue-400 to-purple-400">
               <Brain className="w-6 h-6 text-white" />
             </div>
-            <span className="text-sm font-medium text-gray-700">Mood</span>
+            <span className="text-sm font-medium text-gray-700 text-center">Food Mood Quiz</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
@@ -40,7 +40,7 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
             <div className="rounded-lg p-2 bg-gradient-to-br from-emerald-400 to-teal-400">
               <MapPin className="w-6 h-6 text-white" />
             </div>
-            <span className="text-sm font-medium text-gray-700">Map</span>
+            <span className="text-sm font-medium text-gray-700 text-center">World Cuisine</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
@@ -58,7 +58,7 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
             <div className="rounded-lg p-2 bg-gradient-to-br from-purple-400 to-pink-400">
               <Gamepad2 className="w-6 h-6 text-white" />
             </div>
-            <span className="text-sm font-medium text-gray-700">Game</span>
+            <span className="text-sm font-medium text-gray-700 text-center">Food Match Game</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
@@ -76,7 +76,7 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
             <div className="rounded-lg p-2 bg-gradient-to-br from-orange-400 to-red-400">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
-            <span className="text-sm font-medium text-gray-700">Trends</span>
+            <span className="text-sm font-medium text-gray-700 text-center">Trending Foods</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-[200px] text-center">
