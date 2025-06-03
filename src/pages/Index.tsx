@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import GameIcons from "@/components/GameIcons";
@@ -16,6 +16,19 @@ const Index = () => {
   const [activeView, setActiveView] = useState("home");
   const [browseMode, setBrowseMode] = useState<"restaurants" | "categories">("restaurants");
   const [selectedRestaurant, setSelectedRestaurant] = useState<{id: string, name: string} | null>(null);
+
+  useEffect(() => {
+    // Initialize Eleven Labs widget
+    const script = document.createElement('script');
+    script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
+    script.async = true;
+    script.type = "text/javascript";
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleMoodMatcherClick = () => {
     setActiveView("quiz");
@@ -122,6 +135,9 @@ const Index = () => {
       <main className="flex-1 px-4 py-6 max-w-md mx-auto w-full mt-[72px]">
         {renderMainContent()}
       </main>
+
+      {/* Eleven Labs Voice Support Widget */}
+      <elevenlabs-convai agent-id="agent_01jwv787fbe1dstxdt93fqyr5w"></elevenlabs-convai>
     </div>
   );
 };
