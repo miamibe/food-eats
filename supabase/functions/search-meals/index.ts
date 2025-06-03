@@ -66,21 +66,21 @@ serve(async (req) => {
     console.log('Step 1: Extracting criteria from user query...');
     const extractionPrompt = `Extract meal selection criteria from this user query: "${query}"
 
-Return ONLY a JSON object with these fields (use null for missing criteria):
+Return ONLY a valid JSON object with these fields (use null for missing criteria):
 {
-    "keywords": ["keyword1", "keyword2"], // words to search in name/description
+    "keywords": ["keyword1", "keyword2"],
     "dietary_restrictions": ["low_carb", "vegetarian", "gluten_free", "healthy"], 
     "ingredients": ["meat", "vegetables", "chicken", "fish"],
     "textures": ["crispy", "soft", "crunchy"],
     "flavors": ["spicy", "sweet", "exotic", "mild"],
-    "categories": ["salad", "main", "dessert"], // if identifiable
+    "categories": ["salad", "main", "dessert"],
     "exclude": ["keywords", "to", "avoid"],
-    "price_preference": "budget|moderate|premium" // or null
+    "price_preference": "budget|moderate|premium"
 }
 
 Examples:
 "хочу что-то полезное - минимум углеводов, мясо овощи с экзотическим вкусом и хрустящее"
-→ {"keywords": ["полезное", "мясо", "овощи"], "dietary_restrictions": ["low_carb", "healthy"], "ingredients": ["meat", "vegetables"], "textures": ["crispy"], "flavors": ["exotic"]}`;
+→ {"keywords": ["полезное", "мясо", "овощи"], "dietary_restrictions": ["low_carb", "healthy"], "ingredients": ["meat", "vegetables"], "textures": ["crispy"], "flavors": ["exotic"], "categories": null, "exclude": null, "price_preference": null}`;
 
     const extractionResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -107,7 +107,10 @@ Examples:
     
     let criteria: MealCriteria;
     try {
-      criteria = JSON.parse(extractionContent);
+      // Clean the response content to extract only the JSON part
+      const jsonMatch = extractionContent.match(/\{[\s\S]*\}/);
+      const jsonString = jsonMatch ? jsonMatch[0] : extractionContent;
+      criteria = JSON.parse(jsonString);
       console.log('Extracted criteria:', criteria);
     } catch (parseError) {
       console.error('Failed to parse extraction response:', extractionContent);
@@ -140,9 +143,11 @@ Examples:
 
     // Apply filters based on criteria
     if (criteria.keywords && criteria.keywords.length > 0) {
-      const keywordConditions = criteria.keywords.map(keyword => 
-        `name.ilike.%${keyword}%,description.ilike.%${keyword}%,category.ilike.%${keyword}%`
-      ).join(',');
+      // Create individual OR conditions for each keyword
+      const keywordConditions = criteria.keywords.map(keyword => {
+        const cleanKeyword = keyword.replace(/[%_]/g, '\\$&'); // Escape SQL wildcards
+        return `name.ilike.%${cleanKeyword}%,description.ilike.%${cleanKeyword}%,category.ilike.%${cleanKeyword}%`;
+      }).join(',');
       dbQuery = dbQuery.or(keywordConditions);
     }
 
