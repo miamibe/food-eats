@@ -33,6 +33,13 @@ interface CuisineAdventureMapProps {
   onBack: () => void;
 }
 
+interface CountryInfo {
+  top: string;
+  left: string;
+  label: string;
+  dishes: string[];
+}
+
 const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -91,17 +98,52 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     }
   };
 
-  const getRegionForCuisine = (cuisineType: string): { top: string; left: string; label: string } => {
-    const cuisineMap: Record<string, { top: string; left: string; label: string }> = {
-      'Russian': { top: '25%', left: '65%', label: 'Russia' },
-      'Japanese': { top: '35%', left: '85%', label: 'Japan' },
-      'Thai': { top: '45%', left: '75%', label: 'Thailand' },
-      'Italian': { top: '35%', left: '50%', label: 'Italy' },
-      'European': { top: '30%', left: '48%', label: 'Europe' },
-      'American': { top: '35%', left: '20%', label: 'USA' }
+  const getRegionForCuisine = (cuisineType: string): CountryInfo => {
+    const cuisineMap: Record<string, CountryInfo> = {
+      'Russian': {
+        top: '25%',
+        left: '65%',
+        label: 'Russia',
+        dishes: ['Borscht', 'Beef Stroganoff', 'Pelmeni']
+      },
+      'Japanese': {
+        top: '35%',
+        left: '85%',
+        label: 'Japan',
+        dishes: ['Sushi', 'Ramen', 'Tempura']
+      },
+      'Thai': {
+        top: '45%',
+        left: '75%',
+        label: 'Thailand',
+        dishes: ['Pad Thai', 'Green Curry', 'Tom Yum']
+      },
+      'Italian': {
+        top: '35%',
+        left: '50%',
+        label: 'Italy',
+        dishes: ['Pizza', 'Pasta', 'Risotto']
+      },
+      'European': {
+        top: '30%',
+        left: '48%',
+        label: 'Europe',
+        dishes: ['Schnitzel', 'Paella', 'Moules-frites']
+      },
+      'American': {
+        top: '35%',
+        left: '20%',
+        label: 'USA',
+        dishes: ['Burger', 'Hot Dog', 'BBQ Ribs']
+      }
     };
     
-    return cuisineMap[cuisineType] || { top: '50%', left: '50%', label: cuisineType };
+    return cuisineMap[cuisineType] || { 
+      top: '50%', 
+      left: '50%', 
+      label: cuisineType,
+      dishes: ['Local Specialty', 'Traditional Dish', 'Regional Favorite']
+    };
   };
 
   const formatDeliveryTime = (min: number, max: number) => {
@@ -144,7 +186,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
             🗺️ Explore World Cuisines
           </h3>
           <p className="text-sm text-gray-500">
-            Click on restaurant pins to discover authentic dishes from around the world!
+            Click on pins to discover authentic dishes from around the world!
           </p>
         </div>
 
@@ -174,9 +216,13 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform">
                     🍽️
                   </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap">
-                    <div className="font-bold text-gray-800">{position.label}</div>
-                    <div className="text-xs text-gray-600">{restaurant.name}</div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap">
+                    <div className="font-bold text-gray-800 mb-2">{position.label}</div>
+                    <div className="space-y-1">
+                      {position.dishes.map((dish, index) => (
+                        <div key={index} className="text-xs text-gray-600">• {dish}</div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </button>
