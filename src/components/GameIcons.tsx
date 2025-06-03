@@ -14,69 +14,53 @@ const GameIcons = ({ onMoodMatcherClick, onCuisineMapClick, onGameClick, onTrend
       <Button
         variant="outline"
         onClick={onMoodMatcherClick}
-        className="h-24 flex flex-col items-center justify-center space-y-1 border-none bg-gradient-to-br from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 relative overflow-hidden shadow-lg"
+        className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group"
         style={{
-          backgroundImage: `
-            linear-gradient(135deg, rgba(96, 165, 250, 0.9), rgba(147, 51, 234, 0.9)),
-            url(https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=300)
-          `,
-          backgroundSize: 'cover',
-          backgroundBlendMode: 'overlay'
+          background: "linear-gradient(135deg, rgb(147, 197, 253, 0.9), rgb(167, 139, 250, 0.9))"
         }}
       >
-        <Brain className="w-8 h-8 text-white" />
-        <span className="text-sm text-white font-medium">Mood</span>
+        <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=300')] bg-cover opacity-20 group-hover:opacity-30 transition-opacity" />
+        <Brain className="w-8 h-8 text-white relative z-10" />
+        <span className="text-sm text-white font-medium relative z-10">Mood</span>
       </Button>
       
       <Button
         variant="outline"
         onClick={onCuisineMapClick}
-        className="h-24 flex flex-col items-center justify-center space-y-1 border-none bg-gradient-to-br from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 relative overflow-hidden shadow-lg"
+        className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group"
         style={{
-          backgroundImage: `
-            linear-gradient(135deg, rgba(52, 211, 153, 0.9), rgba(16, 185, 129, 0.9)),
-            url(https://images.pexels.com/photos/2788792/pexels-photo-2788792.jpeg?auto=compress&cs=tinysrgb&w=300)
-          `,
-          backgroundSize: 'cover',
-          backgroundBlendMode: 'overlay'
+          background: "linear-gradient(135deg, rgb(110, 231, 183, 0.9), rgb(16, 185, 129, 0.9))"
         }}
       >
-        <MapPin className="w-8 h-8 text-white" />
-        <span className="text-sm text-white font-medium">Map</span>
+        <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/2788792/pexels-photo-2788792.jpeg?auto=compress&cs=tinysrgb&w=300')] bg-cover opacity-20 group-hover:opacity-30 transition-opacity" />
+        <MapPin className="w-8 h-8 text-white relative z-10" />
+        <span className="text-sm text-white font-medium relative z-10">Map</span>
       </Button>
 
       <Button
         variant="outline"
         onClick={onGameClick}
-        className="h-24 flex flex-col items-center justify-center space-y-1 border-none bg-gradient-to-br from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 relative overflow-hidden shadow-lg"
+        className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group"
         style={{
-          backgroundImage: `
-            linear-gradient(135deg, rgba(192, 132, 252, 0.9), rgba(236, 72, 153, 0.9)),
-            url(https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=300)
-          `,
-          backgroundSize: 'cover',
-          backgroundBlendMode: 'overlay'
+          background: "linear-gradient(135deg, rgb(192, 132, 252, 0.9), rgb(244, 114, 182, 0.9))"
         }}
       >
-        <Gamepad2 className="w-8 h-8 text-white" />
-        <span className="text-sm text-white font-medium">Game</span>
+        <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=300')] bg-cover opacity-20 group-hover:opacity-30 transition-opacity" />
+        <Gamepad2 className="w-8 h-8 text-white relative z-10" />
+        <span className="text-sm text-white font-medium relative z-10">Game</span>
       </Button>
 
       <Button
         variant="outline"
         onClick={onTrendBitesClick}
-        className="h-24 flex flex-col items-center justify-center space-y-1 border-none bg-gradient-to-br from-orange-400 to-red-500 hover:from-orange-500 hover:to-red-600 transition-all duration-300 transform hover:scale-105 relative overflow-hidden shadow-lg"
+        className="h-24 flex flex-col items-center justify-center space-y-1 border-none relative overflow-hidden shadow-lg group"
         style={{
-          backgroundImage: `
-            linear-gradient(135deg, rgba(251, 146, 60, 0.9), rgba(239, 68, 68, 0.9)),
-            url(https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=300)
-          `,
-          backgroundSize: 'cover',
-          backgroundBlendMode: 'overlay'
+          background: "linear-gradient(135deg, rgb(251, 146, 60, 0.9), rgb(239, 68, 68, 0.9))"
         }}
       >
-        <TrendingUp className="w-8 h-8 text-white" />
-        <span className="text-sm text-white font-medium">Trends</span>
+        <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=300')] bg-cover opacity-20 group-hover:opacity-30 transition-opacity" />
+        <TrendingUp className="w-8 h-8 text-white relative z-10" />
+        <span className="text-sm text-white font-medium relative z-10">Trends</span>
       </Button>
     </div>
   );
