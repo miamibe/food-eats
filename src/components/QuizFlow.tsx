@@ -165,7 +165,7 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
-          <Button variant="ghost\" onClick={onBack} className="p-2">
+          <Button variant="ghost" onClick={onBack} className="p-2">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h2 className="text-xl font-bold text-gray-800">Your Perfect Matches!</h2>
@@ -248,16 +248,18 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div className="flex-1">
-          <h2 className="text-xl font-bold text-gray-800">Food Quiz</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-800">Food Quiz</h2>
+            <span className="text-sm text-gray-500">Step {currentStep + 1}/{questions.length}</span>
+          </div>
           <Progress value={progress} className="mt-2 h-2" />
         </div>
       </div>
 
       {/* Question */}
-      <div className="text-center py-8">
-        <div className="text-6xl mb-4">{currentQuestion.emoji}</div>
-        <h3 className="text-2xl font-bold text-gray-800 mb-2">{currentQuestion.question}</h3>
-        <p className="text-gray-600">Step {currentStep + 1} of {questions.length}</p>
+      <div className="flex items-center justify-center space-x-3 py-4">
+        <span className="text-3xl">{currentQuestion.emoji}</span>
+        <h3 className="text-xl font-bold text-gray-800">{currentQuestion.question}</h3>
       </div>
 
       {/* Options */}
@@ -267,7 +269,7 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
             key={option.value}
             onClick={() => handleAnswer(currentQuestion.id, option.value)}
             variant="outline"
-            className="w-full h-16 text-left justify-start border-2 hover:border-orange-300 hover:bg-orange-50 transition-all duration-200"
+            className="w-full h-12 text-left justify-start border-2 hover:border-orange-300 hover:bg-orange-50 transition-all duration-200"
           >
             <span className="text-2xl mr-3">{option.emoji}</span>
             <span className="font-semibold">{option.label}</span>
