@@ -104,10 +104,13 @@ const Index = () => {
       <header className="bg-white border-b border-gray-100 px-4 py-3">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-gray-800 rounded-md flex items-center justify-center">
-              <span className="text-white font-medium text-xs">EB</span>
+            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">FE</span>
             </div>
-            <h1 className="text-lg font-medium text-gray-800">EasyBite</h1>
+            <div>
+              <h1 className="text-lg font-bold text-gray-800">Food Eats</h1>
+              <p className="text-xs text-gray-500">Delicious food delivered</p>
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <CartSheet />
