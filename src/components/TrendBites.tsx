@@ -80,7 +80,7 @@ const trendingDishes: TrendingDish[] = [
 ];
 
 const TrendBites: React.FC<TrendBitesProps> = ({ onBack }) => {
-  const [currentTrend, setCurrentTrend] = useState(() => Math.floor(Math.random() * trendingDishes.length));
+  const [currentTrend, setCurrentTrend] = useState(0);
   const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
   const { dispatch } = useCart();
@@ -112,7 +112,8 @@ const TrendBites: React.FC<TrendBitesProps> = ({ onBack }) => {
 
   useEffect(() => {
     const dish = trendingDishes[currentTrend];
-    const searchQuery = `${dish.description} ${dish.origin.split(' ')[0]} cuisine`;
+    // Simplified search query to focus on the dish name and key characteristics
+    const searchQuery = `${dish.name} ${dish.description}`;
     fetchSimilarMeals(searchQuery);
   }, [currentTrend]);
 
@@ -211,6 +212,27 @@ const TrendBites: React.FC<TrendBitesProps> = ({ onBack }) => {
               No similar dishes found nearby
             </p>
           )}
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center pt-4">
+          <Button 
+            onClick={() => setCurrentTrend((prev) => (prev - 1 + trendingDishes.length) % trendingDishes.length)} 
+            variant="outline" 
+            className="flex-1 mr-2"
+          >
+            ← Previous Trend
+          </Button>
+          <div className="text-sm text-gray-500 px-4">
+            {currentTrend + 1} of {trendingDishes.length}
+          </div>
+          <Button 
+            onClick={() => setCurrentTrend((prev) => (prev + 1) % trendingDishes.length)} 
+            variant="outline" 
+            className="flex-1 ml-2"
+          >
+            Next Trend →
+          </Button>
         </div>
       </div>
     </div>
