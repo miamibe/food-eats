@@ -73,20 +73,25 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch meals');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to fetch meals');
       }
 
       const data = await response.json();
       if (data?.meals) {
         setMeals(data.meals);
-        toast.success(`Found ${data.meals.length} great options for you!`);
+        if (data.meals.length > 0) {
+          toast.success(`Found ${data.meals.length} great options for you!`);
+        } else {
+          toast.info("No matches found. Try describing what you're craving differently!");
+        }
       } else {
         setMeals([]);
         toast.info("No matches found. Try describing what you're craving differently!");
       }
     } catch (error) {
       console.error("Search error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(error.message || "Something went wrong. Please try again.");
       setMeals([]);
     } finally {
       setIsLoading(false);
