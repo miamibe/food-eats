@@ -92,20 +92,12 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
 
   const getRegionForCuisine = (cuisineType: string): { top: string; left: string } => {
     const cuisineMap: Record<string, { top: string; left: string }> = {
-      'Italian': { top: '35%', left: '45%' },
-      'Greek': { top: '38%', left: '48%' },
-      'Spanish': { top: '36%', left: '42%' },
-      'Mexican': { top: '45%', left: '20%' },
-      'American': { top: '40%', left: '25%' },
-      'Japanese': { top: '40%', left: '85%' },
-      'Chinese': { top: '42%', left: '80%' },
-      'Korean': { top: '38%', left: '82%' },
-      'Thai': { top: '48%', left: '75%' },
-      'Indian': { top: '45%', left: '65%' },
-      'Vietnamese': { top: '50%', left: '78%' },
-      'Ethiopian': { top: '55%', left: '55%' },
-      'Moroccan': { top: '45%', left: '42%' },
-      'Nigerian': { top: '52%', left: '45%' }
+      'Russian': { top: '25%', left: '65%' },    // Russia
+      'Japanese': { top: '35%', left: '85%' },   // Japan
+      'Thai': { top: '45%', left: '75%' },       // Thailand
+      'Italian': { top: '35%', left: '50%' },    // Italy
+      'European': { top: '30%', left: '48%' },   // Europe
+      'American': { top: '35%', left: '20%' },   // USA
     };
     
     return cuisineMap[cuisineType] || { top: '50%', left: '50%' };
@@ -156,11 +148,11 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
         </div>
 
         {/* Game-like World Map with Restaurant Pins */}
-        <div className="relative w-full h-[600px] rounded-xl overflow-hidden">
+        <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden">
           {/* Base Map Image */}
           <img 
-            src="/game-like-map.png" 
-            alt="World Map" 
+            src="/ChatGPT Image 3 июн. 2025 г., 17_44_25.png" 
+            alt="World Map"
             className="w-full h-full object-cover"
           />
 
