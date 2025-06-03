@@ -171,25 +171,19 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center space-x-3">
         <Button variant="ghost" onClick={onBack} className="p-2">
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <h2 className="text-xl font-semibold text-gray-800">Cuisine Adventure Map</h2>
+        <div>
+          <h2 className="text-xl font-semibold text-gray-800">Cuisine Adventure Map</h2>
+          <p className="text-sm text-gray-500 mt-1">Click on pins to discover authentic dishes from around the world!</p>
+        </div>
       </div>
 
       <div className="space-y-4">
-        <div className="text-center space-y-2">
-          <h3 className="text-lg font-medium text-gray-700">
-            🗺️ Explore World Cuisines
-          </h3>
-          <p className="text-sm text-gray-500">
-            Click on pins to discover authentic dishes from around the world!
-          </p>
-        </div>
-
         {/* Game-like World Map with Restaurant Pins */}
         <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden">
           {/* Base Map Image */}
@@ -216,9 +210,9 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform cursor-pointer hover:bg-red-600">
                     🍽️
                   </div>
-                  <div className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-lg shadow-lg mt-1 text-sm whitespace-nowrap z-10">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1.5 rounded-lg shadow-lg mt-1 text-sm whitespace-nowrap z-10">
                     <div className="font-medium text-gray-800">{position.label}</div>
-                    <div className="flex items-center gap-1 text-xs text-gray-600 mt-0.5">
+                    <div className="flex items-center gap-1 text-xs text-gray-600">
                       {position.dishes.map((dish, index) => (
                         <React.Fragment key={index}>
                           {index > 0 && <span className="text-gray-300 mx-1">•</span>}
