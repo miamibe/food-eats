@@ -1,54 +1,108 @@
-# Welcome to your Lovable project
+# EasyBite - Food Discovery & Delivery App
 
-## Project info
+EasyBite is a modern food discovery and delivery application that helps users find and order meals from local restaurants. The app features an intuitive interface with multiple ways to discover food, including a food matcher game, cuisine adventure map, and trend bites section.
 
-**URL**: https://lovable.dev/projects/91b8a96a-d04b-4a1b-8ac7-d31654874133
+## Features
 
-## How can I edit this code?
+- **Food Matcher Game**: Swipe through food options to get personalized meal recommendations
+- **Cuisine Adventure Map**: Explore global cuisines and discover authentic dishes near you
+- **Trend Bites**: Stay updated with the latest food trends and popular dishes in your area
+- **Quiz Flow**: Answer a few questions to get personalized meal recommendations
+- **Unified Meal Display**: Consistent and visually appealing meal cards across all sections
+- **Shopping Cart**: Add multiple items to your cart and check out seamlessly
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **Backend**: Supabase (Database & Authentication)
+- **Deployment**: Vercel/Netlify (Frontend), Supabase (Backend)
+- **Styling**: Tailwind CSS with custom components
+- **State Management**: React Context API
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/91b8a96a-d04b-4a1b-8ac7-d31654874133) and start prompting.
+## How It Works
 
-Changes made via Lovable will be committed automatically to this repo.
+1. **User Experience**:
+   - Browse meals through different discovery methods (Game, Map, Trends, Quiz)
+   - View detailed meal information including price, delivery time, and restaurant
+   - Add items to cart and complete the checkout process
 
-**Use your preferred IDE**
+2. **Key Components**:
+   - `MealCard`: Reusable component for displaying meal information consistently
+   - `FoodMatcher`: Interactive game for discovering meals
+   - `CuisineAdventureMap`: Visual map interface for exploring cuisines
+   - `TrendBites`: Showcases trending dishes
+   - `QuizFlow`: Interactive quiz for personalized recommendations
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. **Data Flow**:
+   - Meal data is stored in Supabase
+   - Client-side filtering and sorting for optimal performance
+   - Real-time updates for availability and pricing
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Node.js (v16 or later)
+- npm (v7 or later) or yarn
+- Supabase account (for backend services)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Clone the repository:
+   ```sh
+   git clone <repository-url>
+   cd easybite-fun-finds
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add your Supabase credentials:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+5. Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+
+## Project Structure
+
+```
+src/
+├── components/        # Reusable UI components
+├── lib/               # Utility functions and hooks
+├── pages/             # Page components
+├── styles/            # Global styles
+└── types/             # TypeScript type definitions
 ```
 
-**Edit a file directly in GitHub**
+## Contributing
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-**Use GitHub Codespaces**
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+
+Project Link: [https://github.com/yourusername/easybite-fun-finds](https://github.com/yourusername/easybite-fun-finds)
 
 ## What technologies are used for this project?
 
