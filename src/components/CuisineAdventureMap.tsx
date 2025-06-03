@@ -26,6 +26,7 @@ interface SimilarMeal {
   emoji: string;
   description: string;
   relevance_score: number;
+  match_explanation?: string;
 }
 
 interface CuisineAdventureMapProps {
@@ -90,17 +91,17 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     }
   };
 
-  const getRegionForCuisine = (cuisineType: string): { top: string; left: string } => {
-    const cuisineMap: Record<string, { top: string; left: string }> = {
-      'Russian': { top: '25%', left: '65%' },    // Russia
-      'Japanese': { top: '35%', left: '85%' },   // Japan
-      'Thai': { top: '45%', left: '75%' },       // Thailand
-      'Italian': { top: '35%', left: '50%' },    // Italy
-      'European': { top: '30%', left: '48%' },   // Europe
-      'American': { top: '35%', left: '20%' },   // USA
+  const getRegionForCuisine = (cuisineType: string): { top: string; left: string; label: string } => {
+    const cuisineMap: Record<string, { top: string; left: string; label: string }> = {
+      'Russian': { top: '25%', left: '65%', label: 'Russia' },
+      'Japanese': { top: '35%', left: '85%', label: 'Japan' },
+      'Thai': { top: '45%', left: '75%', label: 'Thailand' },
+      'Italian': { top: '35%', left: '50%', label: 'Italy' },
+      'European': { top: '30%', left: '48%', label: 'Europe' },
+      'American': { top: '35%', left: '20%', label: 'USA' }
     };
     
-    return cuisineMap[cuisineType] || { top: '50%', left: '50%' };
+    return cuisineMap[cuisineType] || { top: '50%', left: '50%', label: cuisineType };
   };
 
   const formatDeliveryTime = (min: number, max: number) => {
@@ -174,9 +175,8 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                     🍽️
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-lg shadow-lg mt-2 text-sm whitespace-nowrap">
-                    {restaurant.name}
-                    <br />
-                    <span className="text-xs text-gray-600">{restaurant.cuisine_type}</span>
+                    <div className="font-bold text-gray-800">{position.label}</div>
+                    <div className="text-xs text-gray-600">{restaurant.name}</div>
                   </div>
                 </div>
               </button>
