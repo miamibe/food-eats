@@ -72,7 +72,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     }
   };
 
-  const fetchSimilarMeals = async (description: string) => {
+  const fetchSimilarMeals = async (description: string, cuisineType: string) => {
     setIsLoadingSimilar(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-meals`, {
@@ -81,7 +81,9 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: description }),
+        body: JSON.stringify({ 
+          query: `${description} ${cuisineType} cuisine` 
+        }),
       });
 
       if (!response.ok) {
@@ -154,8 +156,8 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     setSelectedRegion(restaurantId);
     const restaurant = restaurants.find(r => r.id === restaurantId);
     if (restaurant) {
-      const searchQuery = `${restaurant.name} ${restaurant.description || ''} ${restaurant.cuisine_type} cuisine`;
-      fetchSimilarMeals(searchQuery);
+      const searchQuery = `${restaurant.name} ${restaurant.description || ''} traditional authentic`;
+      fetchSimilarMeals(searchQuery, restaurant.cuisine_type);
     }
   };
 
