@@ -1,10 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import MealCard from "@/components/MealCard";
+import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart, addToCart } from "@/lib/cart";
 import { toast } from "sonner";
+import MealCard from "@/components/MealCard";
+
+// Extend the existing ImportMeta interface
+declare global {
+  interface ImportMetaEnv {
+    VITE_SUPABASE_URL: string;
+    VITE_SUPABASE_ANON_KEY: string;
+  }
+}
 
 interface SimilarMeal {
   id: string;
@@ -22,7 +31,7 @@ interface QuizFlowProps {
   onBack: () => void;
 }
 
-const QuizFlow = ({ onBack }: QuizFlowProps) => {
+const QuizFlow: React.FC<QuizFlowProps> = ({ onBack }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -175,7 +184,7 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
-          <Button variant="ghost\" onClick={onBack} className="p-2">
+          <Button variant="ghost" onClick={onBack} className="p-2">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h2 className="text-xl font-bold text-gray-800">Your Perfect Matches!</h2>
