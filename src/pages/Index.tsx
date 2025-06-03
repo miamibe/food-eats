@@ -10,7 +10,7 @@ import BrowseSection from "@/components/BrowseSection";
 
 const Index = () => {
   const [activeView, setActiveView] = useState("home");
-  const [browseMode, setBrowseMode] = useState("restaurants");
+  const [browseMode, setBrowseMode] = useState<"restaurants" | "categories">("restaurants");
 
   const renderMainContent = () => {
     switch (activeView) {
@@ -36,20 +36,13 @@ const Index = () => {
               <QuickGames />
             </div>
 
-            {/* Main Action Buttons */}
+            {/* Main Action Button */}
             <div className="space-y-4">
-              <Button
-                onClick={() => setActiveView("random")}
-                className="w-full h-16 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-lg font-bold rounded-2xl shadow-lg transform transition-all duration-200 hover:scale-105"
-              >
-                🎲 Random Pick - Surprise Me!
-              </Button>
-
               <Button
                 onClick={() => setActiveView("quiz")}
                 className="w-full h-16 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-lg font-bold rounded-2xl shadow-lg transform transition-all duration-200 hover:scale-105"
               >
-                🧠 Take Quiz - Find My Match
+                🎯 Tell us what you want and we'll show options
               </Button>
             </div>
 

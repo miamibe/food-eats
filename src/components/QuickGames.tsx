@@ -34,16 +34,15 @@ const QuickGames = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="flex gap-2 overflow-x-auto pb-2">
       {games.map((game) => (
         <Card
           key={game.id}
-          className="p-4 cursor-pointer transform transition-all duration-200 hover:scale-105 hover:shadow-lg border-0"
+          className="flex-shrink-0 w-20 cursor-pointer transform transition-all duration-200 hover:scale-105 hover:shadow-lg border-0"
         >
-          <div className={`bg-gradient-to-br ${game.color} rounded-xl p-3 text-center`}>
-            <div className="text-2xl mb-2">{game.emoji}</div>
-            <h3 className="font-bold text-white text-sm mb-1">{game.title}</h3>
-            <p className="text-white/80 text-xs">{game.description}</p>
+          <div className={`bg-gradient-to-br ${game.color} rounded-xl p-2 text-center`}>
+            <div className="text-xl mb-1">{game.emoji}</div>
+            <h3 className="font-bold text-white text-xs leading-tight">{game.title}</h3>
           </div>
         </Card>
       ))}
