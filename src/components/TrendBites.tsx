@@ -31,59 +31,59 @@ interface TrendingDish {
   funFact: string;
 }
 
+const trendingDishes: TrendingDish[] = [
+  {
+    name: "Korean Corn Dogs",
+    description: "Crispy, cheesy Korean-style hot dogs coated in potato cubes and panko breadcrumbs",
+    origin: "South Korea 🇰🇷",
+    trendScore: 98,
+    emoji: "🌭",
+    popularityReason: "Viral on TikTok with over 50M views this month",
+    funFact: "Originally called 'hotteok' style corn dogs, they're stuffed with mozzarella and coated in cubed potatoes!"
+  },
+  {
+    name: "Birria Tacos",
+    description: "Slow-cooked beef in rich, spiced broth served with crispy tortillas and consommé for dipping",
+    origin: "Mexico 🇲🇽",
+    trendScore: 95,
+    emoji: "🌮",
+    popularityReason: "Featured in major food festivals and celebrity chef endorsements",
+    funFact: "Traditionally eaten at celebrations, now the most requested taco variety in the US!"
+  },
+  {
+    name: "Dalgona Coffee Dessert",
+    description: "Whipped coffee cream over milk transformed into various dessert forms",
+    origin: "South Korea 🇰🇷",
+    trendScore: 92,
+    emoji: "☕",
+    popularityReason: "Pandemic home-cooking trend that evolved into restaurant specialty",
+    funFact: "Named after Korean sponge toffee candy, it became the most searched recipe in 2020!"
+  },
+  {
+    name: "Smash Burgers",
+    description: "Ultra-thin beef patties smashed on hot griddle for maximum crispy edges and flavor",
+    origin: "United States 🇺🇸",
+    trendScore: 89,
+    emoji: "🍔",
+    popularityReason: "Championed by burger purists and food influencers for superior taste",
+    funFact: "The technique creates 40% more surface area for the Maillard reaction!"
+  },
+  {
+    name: "Ube Everything",
+    description: "Purple yam from the Philippines featured in ice cream, pastries, and bubble tea",
+    origin: "Philippines 🇵🇭",
+    trendScore: 87,
+    emoji: "🍠",
+    popularityReason: "Instagram-worthy purple color driving social media engagement",
+    funFact: "Ube has a nutty, vanilla-like flavor and is packed with antioxidants!"
+  }
+];
+
 const TrendBites: React.FC<TrendBitesProps> = ({ onBack }) => {
   const [currentTrend, setCurrentTrend] = useState(() => Math.floor(Math.random() * trendingDishes.length));
   const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
   const { dispatch } = useCart();
-
-  const trendingDishes: TrendingDish[] = [
-    {
-      name: "Korean Corn Dogs",
-      description: "Crispy, cheesy Korean-style hot dogs coated in potato cubes and panko breadcrumbs",
-      origin: "South Korea 🇰🇷",
-      trendScore: 98,
-      emoji: "🌭",
-      popularityReason: "Viral on TikTok with over 50M views this month",
-      funFact: "Originally called 'hotteok' style corn dogs, they're stuffed with mozzarella and coated in cubed potatoes!"
-    },
-    {
-      name: "Birria Tacos",
-      description: "Slow-cooked beef in rich, spiced broth served with crispy tortillas and consommé for dipping",
-      origin: "Mexico 🇲🇽",
-      trendScore: 95,
-      emoji: "🌮",
-      popularityReason: "Featured in major food festivals and celebrity chef endorsements",
-      funFact: "Traditionally eaten at celebrations, now the most requested taco variety in the US!"
-    },
-    {
-      name: "Dalgona Coffee Dessert",
-      description: "Whipped coffee cream over milk transformed into various dessert forms",
-      origin: "South Korea 🇰🇷",
-      trendScore: 92,
-      emoji: "☕",
-      popularityReason: "Pandemic home-cooking trend that evolved into restaurant specialty",
-      funFact: "Named after Korean sponge toffee candy, it became the most searched recipe in 2020!"
-    },
-    {
-      name: "Smash Burgers",
-      description: "Ultra-thin beef patties smashed on hot griddle for maximum crispy edges and flavor",
-      origin: "United States 🇺🇸",
-      trendScore: 89,
-      emoji: "🍔",
-      popularityReason: "Championed by burger purists and food influencers for superior taste",
-      funFact: "The technique creates 40% more surface area for the Maillard reaction!"
-    },
-    {
-      name: "Ube Everything",
-      description: "Purple yam from the Philippines featured in ice cream, pastries, and bubble tea",
-      origin: "Philippines 🇵🇭",
-      trendScore: 87,
-      emoji: "🍠",
-      popularityReason: "Instagram-worthy purple color driving social media engagement",
-      funFact: "Ube has a nutty, vanilla-like flavor and is packed with antioxidants!"
-    }
-  ];
 
   const fetchSimilarMeals = async (description: string) => {
     setIsLoadingSimilar(true);
