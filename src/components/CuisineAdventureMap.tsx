@@ -229,11 +229,11 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                 <button
                   key={restaurant.id}
                   onClick={() => setSelectedRestaurant(restaurant)}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-red-500 border-3 border-white rounded-full cursor-pointer flex items-center justify-center text-white font-bold shadow-lg hover:scale-110 transition-transform z-10"
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-red-500 border-3 border-white rounded-full cursor-pointer flex items-center justify-center text-white font-bold shadow-lg hover:scale-110 transition-transform z-10 animate-pulse"
                   style={{ 
                     top: position.top, 
                     left: position.left,
-                    animation: `pulse 2s infinite ${index * 0.3}s`
+                    animationDelay: `${index * 0.3}s`
                   }}
                 >
                   🍽️
@@ -335,13 +335,6 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
           </Card>
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes pulse {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); }
-          50% { transform: translate(-50%, -50%) scale(1.1); }
-        }
-      `}</style>
     </div>
   );
 };
