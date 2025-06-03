@@ -124,14 +124,24 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch recommendations');
+        const errorData = await response.text();
+        console.error('Server response:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorData
+        });
+        throw new Error(`Failed to fetch recommendations: ${response.status} ${response.statusText}${errorData ? ` - ${errorData}` : ''}`);
       }
 
       const data = await response.json();
-      setRecommendations(data.meals || []);
+      if (!data.meals || !Array.isArray(data.meals)) {
+        throw new Error('Invalid response format from server');
+      }
+      
+      setRecommendations(data.meals);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
-      toast.error("Failed to get recommendations");
+      toast.error(error instanceof Error ? error.message : "Failed to get recommendations");
     } finally {
       setIsLoading(false);
     }
@@ -165,7 +175,7 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
-          <Button variant="ghost\" onClick={onBack} className="p-2">
+          <Button variant="ghost" onClick={onBack} className="p-2">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h2 className="text-xl font-bold text-gray-800">Your Perfect Matches!</h2>
