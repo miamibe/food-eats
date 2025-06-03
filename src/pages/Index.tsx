@@ -16,6 +16,7 @@ const Index = () => {
   const [activeView, setActiveView] = useState("home");
   const [browseMode, setBrowseMode] = useState<"restaurants" | "categories">("restaurants");
   const [selectedRestaurant, setSelectedRestaurant] = useState<{id: string, name: string} | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     // Initialize Eleven Labs widget
@@ -28,6 +29,15 @@ const Index = () => {
     return () => {
       document.body.removeChild(script);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleMoodMatcherClick = () => {
@@ -117,22 +127,30 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 px-4 py-3 z-50">
-        <div className="flex items-center justify-between max-w-md mx-auto w-full">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">FE</span>
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+          isScrolled 
+            ? 'bg-white/80 backdrop-blur-lg shadow-sm' 
+            : 'bg-white border-b border-gray-100'
+        }`}
+      >
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between max-w-md mx-auto w-full">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">FE</span>
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-gray-800">Food Eats</h1>
+                <p className="text-xs text-gray-500">Delicious food delivered</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-gray-800">Food Eats</h1>
-              <p className="text-xs text-gray-500">Delicious food delivered</p>
+            <div className="flex items-center space-x-2">
+              <CartSheet />
+              <Button variant="ghost" size="sm" className="rounded-full p-2 hover:bg-gray-50">
+                <User className="w-5 h-5 text-gray-500" />
+              </Button>
             </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <CartSheet />
-            <Button variant="ghost" size="sm" className="rounded-full p-2 hover:bg-gray-50">
-              <User className="w-5 h-5 text-gray-500" />
-            </Button>
           </div>
         </div>
       </header>
