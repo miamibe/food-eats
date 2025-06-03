@@ -26,19 +26,31 @@ serve(async (req) => {
     console.log('Searching for meals with query:', query);
 
     // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY');
+    
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Supabase credentials not found');
+      return new Response(
+        JSON.stringify({ error: 'Supabase configuration error' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Get Groq API key
+    // Get Groq API key and validate it
     const groqApiKey = Deno.env.get('GROQ_API_KEY');
-    if (!groqApiKey) {
-      console.error('GROQ_API_KEY not found in environment');
+    if (!groqApiKey || groqApiKey.trim() === '') {
+      console.error('GROQ_API_KEY not found or empty in environment');
       return new Response(
         JSON.stringify({ error: 'Groq API key not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // Clean the API key (remove any potential whitespace or invalid characters)
+    const cleanApiKey = groqApiKey.trim();
 
     // Fetch available meals from database
     const { data: meals, error: mealsError } = await supabase
@@ -67,7 +79,7 @@ serve(async (req) => {
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${groqApiKey}`,
+        'Authorization': `Bearer ${cleanApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -88,8 +100,9 @@ serve(async (req) => {
     });
 
     if (!groqResponse.ok) {
-      console.error('Groq API error:', groqResponse.status);
-      throw new Error(`Groq API error: ${groqResponse.status}`);
+      const errorText = await groqResponse.text();
+      console.error('Groq API error:', groqResponse.status, errorText);
+      throw new Error(`Groq API error: ${groqResponse.status} - ${errorText}`);
     }
 
     const groqData = await groqResponse.json();
@@ -140,7 +153,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Search meals error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || 'An unexpected error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
