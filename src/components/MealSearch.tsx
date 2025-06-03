@@ -6,26 +6,28 @@ import { ArrowLeft, Send, Loader2, ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart, addToCart } from "@/lib/cart";
+import MealCard from "@/components/MealCard";
 
 interface MealSearchProps {
   onBack: () => void;
   isInline?: boolean;
 }
 
-interface Meal {
+interface SimilarMeal {
   id: string;
   name: string;
   restaurant: string;
-  price: string;
+  price: number | string;
   deliveryTime: string;
   emoji: string;
   description: string;
+  match_explanation?: string;
 }
 
 const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [meals, setMeals] = useState<Meal[]>([]);
+  const [meals, setMeals] = useState<SimilarMeal[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -104,17 +106,6 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
     }
   };
 
-  const handleAddToCart = (meal: Meal) => {
-    addToCart(dispatch, {
-      id: meal.id,
-      name: meal.name,
-      price: typeof meal.price === 'string' ? parseFloat(meal.price.replace('$', '')) : meal.price,
-      quantity: 1,
-      restaurant: meal.restaurant,
-      emoji: meal.emoji
-    });
-  };
-
   return (
     <div className="w-full flex flex-col gap-6" ref={containerRef}>
       {/* Header */}
@@ -165,27 +156,18 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
           </h3>
           <div className="space-y-2">
             {meals.map((meal) => (
-              <Card 
-                key={meal.id} 
-                className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => handleAddToCart(meal)}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xl">{meal.emoji}</span>
-                      <div>
-                        <h4 className="font-medium text-gray-800">{meal.name}</h4>
-                        <p className="text-sm text-gray-600">{meal.restaurant}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium text-gray-800">{meal.price}</p>
-                    <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
-                  </div>
-                </div>
-              </Card>
+              <MealCard
+                key={meal.id}
+                id={meal.id}
+                name={meal.name}
+                restaurant={meal.restaurant}
+                price={meal.price}
+                deliveryTime={meal.deliveryTime}
+                emoji={meal.emoji}
+                description={meal.description}
+                match_explanation={meal.match_explanation}
+                className="mb-2"
+              />
             ))}
           </div>
         </div>
