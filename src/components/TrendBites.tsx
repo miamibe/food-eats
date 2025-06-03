@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, TrendingUp, Star, Clock, MapPin, Loader2 } from "lucide-react";
+import { ArrowLeft, TrendingUp, Star, Clock, Loader2 } from "lucide-react";
+import { useCart, addToCart } from "@/lib/cart";
 
 interface TrendBitesProps {
   onBack: () => void;
@@ -11,7 +12,7 @@ interface SimilarMeal {
   id: string;
   name: string;
   restaurant: string;
-  price: string;
+  price: number;
   deliveryTime: string;
   emoji: string;
   description: string;
@@ -33,6 +34,7 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
   const [currentTrend, setCurrentTrend] = useState(0);
   const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
+  const { dispatch } = useCart();
 
   const trendingDishes: TrendingDish[] = [
     {
@@ -108,11 +110,21 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
   };
 
   useEffect(() => {
-    // Fetch similar meals when current trend changes
     const dish = trendingDishes[currentTrend];
     const searchQuery = `${dish.name} ${dish.description} ${dish.origin.split(' ')[0]} cuisine`;
     fetchSimilarMeals(searchQuery);
   }, [currentTrend]);
+
+  const handleAddToCart = (meal: SimilarMeal) => {
+    addToCart(dispatch, {
+      id: meal.id,
+      name: meal.name,
+      price: typeof meal.price === 'string' ? parseFloat(meal.price.replace('$', '')) : meal.price,
+      quantity: 1,
+      restaurant: meal.restaurant,
+      emoji: meal.emoji
+    });
+  };
 
   const dish = trendingDishes[currentTrend];
 
@@ -169,42 +181,43 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
 
         {/* Available Near You */}
         <div className="space-y-3">
-          <h4 className="font-semibold text-gray-800 flex items-center">
-            <MapPin className="w-4 h-4 mr-2" />
-            Available Near You
-          </h4>
+          <h4 className="font-semibold text-gray-800">Available Near You</h4>
           
           {isLoadingSimilar ? (
-            <div className="text-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin mx-auto mb-4 text-gray-600" />
+            <div className="text-center py-4">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-gray-600" />
               <p className="text-gray-500 text-sm">Finding similar dishes...</p>
             </div>
           ) : similarMeals.length > 0 ? (
-            similarMeals.map((restaurant) => (
-              <Card key={restaurant.id} className="p-3 border border-gray-200 hover:border-gray-300 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h5 className="font-medium text-gray-800">{restaurant.name}</h5>
-                    <div className="flex items-center space-x-3 text-sm text-gray-600">
-                      <span className="font-bold text-green-600">{restaurant.price}</span>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{restaurant.deliveryTime}</span>
+            <div className="space-y-2">
+              {similarMeals.map((meal) => (
+                <Card 
+                  key={meal.id} 
+                  className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() => handleAddToCart(meal)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl">{meal.emoji}</span>
+                        <div>
+                          <h5 className="font-medium text-gray-800">{meal.name}</h5>
+                          <p className="text-sm text-gray-600">{meal.restaurant}</p>
+                        </div>
                       </div>
                     </div>
-                    {restaurant.match_explanation && (
-                      <p className="text-xs text-gray-500 mt-1">{restaurant.match_explanation}</p>
-                    )}
+                    <div className="text-right">
+                      <p className="font-medium text-gray-800">{meal.price}</p>
+                      <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-1 text-yellow-500">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm font-medium text-gray-700">{restaurant.relevance_score.toFixed(1)}</span>
-                  </div>
-                </div>
-              </Card>
-            ))
+                </Card>
+              ))}
+            </div>
           ) : (
-            <p className="text-center text-gray-500 py-4">No similar dishes found nearby</p>
+            <p className="text-center text-gray-500 py-4">
+              No similar dishes found nearby
+            </p>
           )}
         </div>
 
@@ -228,11 +241,6 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
             Next Trend →
           </Button>
         </div>
-
-        {/* Order Button */}
-        <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-          Order {dish.name} Now
-        </Button>
       </div>
     </div>
   );
