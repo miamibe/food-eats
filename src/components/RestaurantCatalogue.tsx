@@ -142,7 +142,7 @@ const RestaurantCatalogue = ({ onRestaurantClick }: RestaurantCatalogueProps) =>
   if (isLoading) {
     return (
       <div className="px-2">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">Restaurants</h3>
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Restaurants near you</h3>
         <div className="text-center py-8">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-4 text-gray-600" />
           <p className="text-gray-500 text-sm">Loading restaurants...</p>
@@ -153,7 +153,7 @@ const RestaurantCatalogue = ({ onRestaurantClick }: RestaurantCatalogueProps) =>
 
   return (
     <div className="px-2">
-      <h3 className="text-lg font-medium text-gray-800 mb-4">Restaurants</h3>
+      <h3 className="text-lg font-medium text-gray-800 mb-4">Restaurants near you</h3>
       <div className="grid grid-cols-2 gap-4">
         {restaurants.map((restaurant) => (
           <Card 
