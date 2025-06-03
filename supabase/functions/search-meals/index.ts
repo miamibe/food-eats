@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
         price,
         emoji,
         preparation_time,
+        category,
         restaurants!inner (
           name,
           delivery_time_min,
@@ -49,7 +50,7 @@ Deno.serve(async (req) => {
         )
       `)
       .textSearch('name', query.split(' ').join(' & '))
-      .limit(5);
+      .limit(8);
 
     if (error) {
       throw error;
@@ -60,10 +61,11 @@ Deno.serve(async (req) => {
       id: meal.id,
       name: meal.name,
       restaurant: meal.restaurants.name,
-      price: `$${meal.price.toFixed(2)}`,
+      price: meal.price,
       deliveryTime: `${meal.restaurants.delivery_time_min}-${meal.restaurants.delivery_time_max} min`,
       emoji: meal.emoji || '🍽️',
-      description: meal.description,
+      description: meal.description || '',
+      category: meal.category || 'main',
       relevance_score: 4.5 // Default score since we don't have actual relevance scoring
     }));
 

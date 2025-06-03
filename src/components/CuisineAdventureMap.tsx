@@ -26,6 +26,7 @@ interface SimilarMeal {
   emoji: string;
   description: string;
   relevance_score: number;
+  match_explanation?: string;
 }
 
 interface CuisineAdventureMapProps {
@@ -128,7 +129,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     addToCart(dispatch, {
       id: meal.id,
       name: meal.name,
-      price: typeof meal.price === 'string' ? parseFloat(meal.price.replace('$', '')) : meal.price,
+      price: meal.price,
       quantity: 1,
       restaurant: meal.restaurant,
       emoji: meal.emoji
@@ -264,11 +265,14 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                             <div>
                               <h5 className="font-medium text-gray-800">{meal.name}</h5>
                               <p className="text-sm text-gray-600">{meal.restaurant}</p>
+                              {meal.description && (
+                                <p className="text-xs text-gray-500">{meal.description}</p>
+                              )}
                             </div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-gray-800">{meal.price}</p>
+                          <p className="font-medium text-gray-800">${meal.price.toFixed(2)}</p>
                           <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
                         </div>
                       </div>
