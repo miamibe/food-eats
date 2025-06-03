@@ -63,17 +63,20 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
     setHasSearched(true);
 
     try {
-      console.log('Searching for meals with query:', query);
-      
-      const { data, error } = await supabase.functions.invoke('search-meals', {
-        body: { query }
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-meals`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
       });
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
+      if (!response.ok) {
+        throw new Error('Failed to fetch meals');
       }
 
+      const data = await response.json();
       if (data?.meals) {
         setMeals(data.meals);
         toast.success(`Found ${data.meals.length} great options for you!`);
@@ -108,39 +111,37 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
   };
 
   return (
-    <div className="w-full space-y-6" ref={containerRef}>
+    <div className="w-full flex flex-col gap-6" ref={containerRef}>
       {/* Header */}
       <div className="flex items-center space-x-3">
-        <Button variant="ghost" onClick={onBack} className="p-2 hover:bg-gray-50">
-          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        <Button variant="ghost" onClick={onBack} className="p-2">
+          <ArrowLeft className="w-5 h-5" />
         </Button>
         <h2 className="text-lg font-medium text-gray-800">Find Your Meal</h2>
       </div>
 
       {/* Search Input */}
-      <div className="space-y-4">
-        <div className="relative">
-          <Input
-            ref={inputRef}
-            placeholder="Hungry? Tell the AI what you're in the mood for"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className="pr-12 h-12 text-base border-gray-200 focus:border-gray-300"
-          />
-          <Button
-            onClick={searchMealsWithSupabase}
-            disabled={isLoading || !query.trim()}
-            size="sm"
-            className="absolute right-2 top-2 h-8 w-8 p-0 bg-gray-800 hover:bg-gray-700"
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Send className="w-4 h-4" />
-            )}
-          </Button>
-        </div>
+      <div className="relative">
+        <Input
+          ref={inputRef}
+          placeholder="Hungry? Tell the AI what you're in the mood for"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyPress={handleKeyPress}
+          className="pr-12 h-12 text-base"
+        />
+        <Button
+          onClick={searchMealsWithSupabase}
+          disabled={isLoading || !query.trim()}
+          size="sm"
+          className="absolute right-2 top-2 h-8 w-8 p-0 bg-gray-800 hover:bg-gray-700"
+        >
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4" />
+          )}
+        </Button>
       </div>
 
       {/* Loading State */}

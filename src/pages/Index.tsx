@@ -76,7 +76,7 @@ const Index = () => {
         ) : null;
       default:
         return (
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             <GameIcons 
               onMoodMatcherClick={handleMoodMatcherClick}
               onCuisineMapClick={handleCuisineMapClick}
@@ -84,14 +84,12 @@ const Index = () => {
               onTrendBitesClick={handleTrendBitesClick}
             />
 
-            <div className="px-2">
-              <button
-                onClick={handleSearchClick}
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-colors"
-              >
-                Hungry? Tell the AI what you're in the mood for
-              </button>
-            </div>
+            <button
+              onClick={handleSearchClick}
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-colors"
+            >
+              Hungry? Tell the AI what you're in the mood for
+            </button>
 
             <RestaurantCatalogue onRestaurantClick={handleRestaurantClick} />
           </div>
@@ -102,7 +100,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 px-4 py-3 z-50">
-        <div className="flex items-center justify-between max-w-md mx-auto">
+        <div className="flex items-center justify-between max-w-md mx-auto w-full">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">FE</span>
@@ -121,7 +119,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-6 max-w-md mx-auto pb-20 mt-[72px]">
+      <main className="flex-1 px-4 py-6 max-w-md mx-auto w-full mt-[72px]">
         {renderMainContent()}
       </main>
     </div>
