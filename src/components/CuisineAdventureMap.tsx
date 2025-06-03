@@ -26,7 +26,6 @@ interface Region {
   emoji: string;
   color: string;
   position: { top: string; left: string };
-  shape: string;
   dishes: {
     name: string;
     description: string;
@@ -37,96 +36,11 @@ interface Region {
 
 const regions: Region[] = [
   {
-    id: "east-asia",
-    name: "East Asia",
-    emoji: "🍜",
-    color: "#FFD6A5",
-    position: { top: "30%", left: "80%" },
-    shape: "60% 70% 70% 60% / 60% 60% 70% 70%",
-    dishes: [
-      {
-        name: "Sushi Platter",
-        description: "Fresh assorted sushi and sashimi",
-        image: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg",
-        emoji: "🍣"
-      },
-      {
-        name: "Korean BBQ",
-        description: "Grilled marinated meats and banchan",
-        image: "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg",
-        emoji: "🥩"
-      },
-      {
-        name: "Dim Sum",
-        description: "Variety of steamed dumplings and buns",
-        image: "https://images.pexels.com/photos/955137/pexels-photo-955137.jpeg",
-        emoji: "🥟"
-      }
-    ]
-  },
-  {
-    id: "south-asia",
-    name: "South Asia",
-    emoji: "🍛",
-    color: "#E2F0CB",
-    position: { top: "45%", left: "70%" },
-    shape: "70% 30% 50% 70% / 60% 70% 50% 40%",
-    dishes: [
-      {
-        name: "Butter Chicken",
-        description: "Creamy tomato curry with tender chicken",
-        image: "https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg",
-        emoji: "🍗"
-      },
-      {
-        name: "Biryani",
-        description: "Aromatic rice with spices and meat",
-        image: "https://images.pexels.com/photos/12737656/pexels-photo-12737656.jpeg",
-        emoji: "🍚"
-      },
-      {
-        name: "Masala Dosa",
-        description: "Crispy crepe with spiced potato filling",
-        image: "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg",
-        emoji: "🥞"
-      }
-    ]
-  },
-  {
-    id: "mediterranean",
-    name: "Mediterranean",
-    emoji: "🫒",
-    color: "#B5EAD7",
-    position: { top: "35%", left: "45%" },
-    shape: "40% 60% 70% 30% / 50% 60% 40% 50%",
-    dishes: [
-      {
-        name: "Greek Mezze",
-        description: "Assorted appetizers with pita bread",
-        image: "https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg",
-        emoji: "🥙"
-      },
-      {
-        name: "Paella",
-        description: "Saffron rice with seafood and chorizo",
-        image: "https://images.pexels.com/photos/12419160/pexels-photo-12419160.jpeg",
-        emoji: "🥘"
-      },
-      {
-        name: "Italian Pasta",
-        description: "Fresh pasta with authentic sauces",
-        image: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg",
-        emoji: "🍝"
-      }
-    ]
-  },
-  {
     id: "americas",
     name: "The Americas",
     emoji: "🌮",
-    color: "#FF9AA2",
-    position: { top: "40%", left: "20%" },
-    shape: "50% 60% 30% 70% / 60% 40% 70% 40%",
+    color: "#FFB5BA",
+    position: { top: "40%", left: "25%" },
     dishes: [
       {
         name: "Street Tacos",
@@ -149,12 +63,92 @@ const regions: Region[] = [
     ]
   },
   {
+    id: "mediterranean",
+    name: "Mediterranean",
+    emoji: "🫒",
+    color: "#B5EAD7",
+    position: { top: "35%", left: "45%" },
+    dishes: [
+      {
+        name: "Greek Mezze",
+        description: "Assorted appetizers with pita bread",
+        image: "https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg",
+        emoji: "🥙"
+      },
+      {
+        name: "Paella",
+        description: "Saffron rice with seafood and chorizo",
+        image: "https://images.pexels.com/photos/12419160/pexels-photo-12419160.jpeg",
+        emoji: "🥘"
+      },
+      {
+        name: "Italian Pasta",
+        description: "Fresh pasta with authentic sauces",
+        image: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg",
+        emoji: "🍝"
+      }
+    ]
+  },
+  {
+    id: "south-asia",
+    name: "South Asia",
+    emoji: "🍛",
+    color: "#E2F0CB",
+    position: { top: "45%", left: "65%" },
+    dishes: [
+      {
+        name: "Butter Chicken",
+        description: "Creamy tomato curry with tender chicken",
+        image: "https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg",
+        emoji: "🍗"
+      },
+      {
+        name: "Biryani",
+        description: "Aromatic rice with spices and meat",
+        image: "https://images.pexels.com/photos/12737656/pexels-photo-12737656.jpeg",
+        emoji: "🍚"
+      },
+      {
+        name: "Masala Dosa",
+        description: "Crispy crepe with spiced potato filling",
+        image: "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg",
+        emoji: "🥞"
+      }
+    ]
+  },
+  {
+    id: "east-asia",
+    name: "East Asia",
+    emoji: "🍜",
+    color: "#FFE8D6",
+    position: { top: "30%", left: "80%" },
+    dishes: [
+      {
+        name: "Sushi Platter",
+        description: "Fresh assorted sushi and sashimi",
+        image: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg",
+        emoji: "🍣"
+      },
+      {
+        name: "Korean BBQ",
+        description: "Grilled marinated meats and banchan",
+        image: "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg",
+        emoji: "🥩"
+      },
+      {
+        name: "Dim Sum",
+        description: "Variety of steamed dumplings and buns",
+        image: "https://images.pexels.com/photos/955137/pexels-photo-955137.jpeg",
+        emoji: "🥟"
+      }
+    ]
+  },
+  {
     id: "africa",
     name: "Africa",
     emoji: "🍖",
     color: "#FFDAC1",
     position: { top: "55%", left: "45%" },
-    shape: "70% 40% 60% 50% / 50% 60% 40% 60%",
     dishes: [
       {
         name: "Jollof Rice",
@@ -194,7 +188,6 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
   const fetchRestaurants = async (region: Region) => {
     setIsLoading(true);
     try {
-      // Map region to cuisine types
       const cuisineMap = {
         "east-asia": ["Japanese", "Korean", "Chinese"],
         "south-asia": ["Indian", "Thai", "Vietnamese"],
@@ -228,7 +221,6 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     setAnimatingRegion(region.id);
     setShowAnimation(true);
     
-    // Animate region selection
     setTimeout(() => {
       setSelectedRegion(region);
       setShowAnimation(false);
@@ -262,79 +254,68 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
           </div>
 
           {/* Stylized World Map */}
-          <div className="relative bg-[#1a4b5c] rounded-xl h-[500px] overflow-hidden border-2 border-gray-200">
-            {/* Ocean Animation */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,#cffafe_0,#0ea5e9_100%)] opacity-20 animate-pulse" />
-            
-            {/* Regions */}
+          <div className="relative bg-[#4A90A7] rounded-xl h-[500px] overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute top-4 left-4 text-2xl">🧭</div>
+            <div className="absolute top-4 right-4 text-2xl">☀️</div>
+            <div className="absolute bottom-4 left-4 text-2xl">🌊</div>
+            <div className="absolute bottom-4 right-4 text-2xl">🗺️</div>
+            <div className="absolute top-1/2 right-1/4 text-xl opacity-50">✈️</div>
+            <div className="absolute bottom-1/3 left-1/3 text-xl opacity-50">⛵</div>
+
+            {/* Region Circles */}
             {regions.map((region) => (
-              <div
+              <button
                 key={region.id}
                 onClick={() => handleRegionClick(region)}
-                className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500
-                  ${animatingRegion === region.id ? 'scale-125 rotate-12' : 'hover:scale-110'}`}
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500
+                  ${animatingRegion === region.id ? 'scale-110' : 'hover:scale-105'}`}
                 style={{
                   top: region.position.top,
                   left: region.position.left,
-                  backgroundColor: region.color,
-                  width: "150px",
-                  height: "150px",
-                  borderRadius: region.shape,
-                  padding: "20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-                  border: "3px solid rgba(255, 255, 255, 0.5)",
-                  transition: "all 0.5s ease-in-out"
+                  width: "200px",
+                  height: "200px",
                 }}
               >
-                <span className="text-4xl mb-2 transform transition-transform duration-300 hover:scale-125">
-                  {region.emoji}
-                </span>
-                <span className="text-sm font-medium text-gray-800 text-center">
-                  {region.name}
-                </span>
-              </div>
+                <div
+                  className="w-full h-full rounded-full flex flex-col items-center justify-center text-center p-4"
+                  style={{
+                    backgroundColor: region.color,
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  <span className="text-4xl mb-2">{region.emoji}</span>
+                  <span className="text-lg font-medium text-gray-800">{region.name}</span>
+                </div>
+              </button>
             ))}
-
-            {/* Decorative Elements */}
-            <div className="absolute top-4 right-4 text-3xl animate-bounce">☀️</div>
-            <div className="absolute bottom-4 left-4 text-2xl animate-pulse">🌊</div>
-            <div className="absolute top-1/3 left-1/3 text-xl animate-pulse opacity-70">⛵</div>
-            <div className="absolute bottom-1/3 right-1/4 text-xl animate-pulse opacity-70">✈️</div>
-            
-            {/* Additional Map Elements */}
-            <div className="absolute bottom-8 right-8 text-2xl animate-bounce opacity-80">🗺️</div>
-            <div className="absolute top-8 left-8 text-2xl animate-pulse opacity-80">🧭</div>
           </div>
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Region Header with Animation */}
-          <div className="text-center space-y-2 animate-fadeIn">
-            <div className="text-4xl mb-2 animate-bounce">{selectedRegion.emoji}</div>
+          {/* Region Details */}
+          <div className="text-center space-y-2">
+            <div className="text-4xl mb-2">{selectedRegion.emoji}</div>
             <h3 className="text-2xl font-bold text-gray-800">{selectedRegion.name}</h3>
             <p className="text-gray-600">Discover authentic {selectedRegion.name} cuisine</p>
           </div>
 
-          {/* Signature Dishes with Hover Effects */}
+          {/* Signature Dishes */}
           <div className="space-y-4">
             <h4 className="font-semibold text-gray-800">Signature Dishes</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {selectedRegion.dishes.map((dish, index) => (
                 <Card 
                   key={index} 
-                  className="overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  className="overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="aspect-video relative">
                     <img
                       src={dish.image}
                       alt={dish.name}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                      className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-2 right-2 text-2xl animate-bounce">
+                    <div className="absolute top-2 right-2 text-2xl">
                       {dish.emoji}
                     </div>
                   </div>
@@ -363,7 +344,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                 {restaurants.map((restaurant) => (
                   <Card 
                     key={restaurant.id} 
-                    className="p-4 transform transition-all duration-300 hover:scale-102 hover:shadow-md"
+                    className="p-4 hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-center justify-between">
                       <div>
