@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
+import { CartButton } from "@/components/CartButton";
 import GameIcons from "@/components/GameIcons";
 import QuizFlow from "@/components/QuizFlow";
 import CuisineAdventureMap from "@/components/CuisineAdventureMap";
@@ -76,7 +77,6 @@ const Index = () => {
       default:
         return (
           <div className="space-y-6">
-            {/* Game Icons */}
             <GameIcons 
               onMoodMatcherClick={handleMoodMatcherClick}
               onCuisineMapClick={handleCuisineMapClick}
@@ -84,7 +84,6 @@ const Index = () => {
               onTrendBitesClick={handleTrendBitesClick}
             />
 
-            {/* Search Input */}
             <div className="px-2">
               <button
                 onClick={handleSearchClick}
@@ -94,7 +93,6 @@ const Index = () => {
               </button>
             </div>
 
-            {/* Restaurant Catalogue */}
             <RestaurantCatalogue onRestaurantClick={handleRestaurantClick} />
           </div>
         );
@@ -103,7 +101,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
       <header className="bg-white border-b border-gray-100 px-4 py-3">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center space-x-2">
@@ -112,13 +109,15 @@ const Index = () => {
             </div>
             <h1 className="text-lg font-medium text-gray-800">EasyBite</h1>
           </div>
-          <Button variant="ghost" size="sm" className="rounded-full p-2 hover:bg-gray-50">
-            <User className="w-5 h-5 text-gray-500" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            <CartButton />
+            <Button variant="ghost" size="sm" className="rounded-full p-2 hover:bg-gray-50">
+              <User className="w-5 h-5 text-gray-500" />
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-4 py-6 max-w-md mx-auto pb-20">
         {renderMainContent()}
       </main>
