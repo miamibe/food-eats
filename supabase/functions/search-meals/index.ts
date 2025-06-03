@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
       throw new Error('Search query is required');
     }
 
-    // Search for meals using multiple approaches
+    // Search for meals that match the query
     const { data: meals, error } = await supabase
       .from('meals')
       .select(`
@@ -49,70 +49,15 @@ Deno.serve(async (req) => {
           delivery_time_max
         )
       `)
-      .or(`
-        name.ilike.%${query}%,
-        description.ilike.%${query}%,
-        category.ilike.%${query}%
-      `)
-      .eq('is_available', true)
+      .textSearch('name', query.split(' ').join(' & '))
       .limit(8);
 
     if (error) {
       throw error;
     }
 
-    // If no results found with direct search, try searching by restaurant cuisine type
-    if (!meals || meals.length === 0) {
-      const { data: cuisineMeals, error: cuisineError } = await supabase
-        .from('meals')
-        .select(`
-          id,
-          name,
-          description,
-          price,
-          emoji,
-          preparation_time,
-          category,
-          restaurants!inner (
-            name,
-            delivery_time_min,
-            delivery_time_max,
-            cuisine_type
-          )
-        `)
-        .eq('is_available', true)
-        .filter('restaurants.cuisine_type', 'ilike', `%${query}%`)
-        .limit(8);
-
-      if (!cuisineError && cuisineMeals && cuisineMeals.length > 0) {
-        return new Response(
-          JSON.stringify({
-            meals: cuisineMeals.map(meal => ({
-              id: meal.id,
-              name: meal.name,
-              restaurant: meal.restaurants.name,
-              price: meal.price,
-              deliveryTime: `${meal.restaurants.delivery_time_min}-${meal.restaurants.delivery_time_max} min`,
-              emoji: meal.emoji || '🍽️',
-              description: meal.description || '',
-              category: meal.category || 'main',
-              relevance_score: 4.0,
-              match_explanation: `Matched ${meal.restaurants.cuisine_type} cuisine`
-            }))
-          }),
-          {
-            headers: {
-              ...corsHeaders,
-              'Content-Type': 'application/json',
-            },
-            status: 200,
-          }
-        );
-      }
-    }
-
     // Transform the data to match the expected format
-    const formattedMeals = meals?.map((meal) => ({
+    const formattedMeals = meals.map((meal) => ({
       id: meal.id,
       name: meal.name,
       restaurant: meal.restaurants.name,
@@ -121,9 +66,8 @@ Deno.serve(async (req) => {
       emoji: meal.emoji || '🍽️',
       description: meal.description || '',
       category: meal.category || 'main',
-      relevance_score: 4.5,
-      match_explanation: 'Direct match found'
-    })) || [];
+      relevance_score: 4.5 // Default score since we don't have actual relevance scoring
+    }));
 
     return new Response(
       JSON.stringify({
@@ -139,7 +83,6 @@ Deno.serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Search error:', error);
     return new Response(
       JSON.stringify({
         error: error.message
