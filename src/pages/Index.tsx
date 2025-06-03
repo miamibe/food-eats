@@ -2,15 +2,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { User, Search, Grid2x2, List } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { User, Search, Grid2x2, List, Send } from "lucide-react";
 import QuickGames from "@/components/QuickGames";
 import QuizFlow from "@/components/QuizFlow";
 import RandomPick from "@/components/RandomPick";
 import BrowseSection from "@/components/BrowseSection";
+import MealSearch from "@/components/MealSearch";
 
 const Index = () => {
   const [activeView, setActiveView] = useState("home");
   const [browseMode, setBrowseMode] = useState<"restaurants" | "categories">("restaurants");
+
+  const handleMoodMatcherClick = () => {
+    setActiveView("quiz");
+  };
 
   const renderMainContent = () => {
     switch (activeView) {
@@ -25,6 +31,8 @@ const Index = () => {
             onBack={() => setActiveView("home")}
           />
         );
+      case "search":
+        return <MealSearch onBack={() => setActiveView("home")} />;
       default:
         return (
           <div className="space-y-6">
@@ -33,17 +41,12 @@ const Index = () => {
               <h2 className="text-xl font-bold text-gray-800 mb-4">
                 🎮 Quick Games
               </h2>
-              <QuickGames />
+              <QuickGames onMoodMatcherClick={handleMoodMatcherClick} />
             </div>
 
-            {/* Main Action Button */}
+            {/* Main Search Input */}
             <div className="space-y-4">
-              <Button
-                onClick={() => setActiveView("quiz")}
-                className="w-full h-16 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-lg font-bold rounded-2xl shadow-lg transform transition-all duration-200 hover:scale-105"
-              >
-                🎯 Tell us what you want and we'll show options
-              </Button>
+              <MealSearch onBack={() => setActiveView("home")} isInline={true} />
             </div>
 
             {/* Browse Toggle */}
