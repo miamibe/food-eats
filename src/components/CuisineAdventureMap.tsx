@@ -185,10 +185,10 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
 
       <div className="space-y-4">
         {/* Game-like World Map with Restaurant Pins */}
-        <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden">
+        <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden bg-blue-50">
           {/* Base Map Image */}
           <img 
-            src="/game-like-map.png" 
+            src="/map-imagen.png" 
             alt="World Map"
             className="w-full h-full object-cover"
           />
