@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -216,7 +215,9 @@ Be generous with semantic matching - if a "thick soup" exists for a "hearty" que
           deliveryTime: `${meal.restaurants?.delivery_time_min || 15}-${meal.restaurants?.delivery_time_max || 30} min`,
           emoji: meal.emoji || '🍽️',
           description: meal.description || '',
-          category: meal.category || 'main'
+          category: meal.category || 'main',
+          relevance_score: 6, // Add default relevance score for fallback results
+          match_explanation: 'Found by text search' // Add explanation for fallback results
         }));
 
       return new Response(
