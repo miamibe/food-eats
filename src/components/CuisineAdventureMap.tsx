@@ -20,10 +20,23 @@ interface Restaurant {
   description: string;
 }
 
+interface SimilarMeal {
+  id: string;
+  name: string;
+  restaurant: string;
+  price: string;
+  deliveryTime: string;
+  emoji: string;
+  description: string;
+  relevance_score: number;
+}
+
 const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
+  const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
 
   useEffect(() => {
     fetchAllRestaurants();
@@ -46,6 +59,32 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
       toast.error("Failed to load restaurants");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchSimilarMeals = async (description: string) => {
+    setIsLoadingSimilar(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-meals`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: description }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch similar meals');
+      }
+
+      const data = await response.json();
+      setSimilarMeals(data.meals || []);
+    } catch (error) {
+      console.error('Error fetching similar meals:', error);
+      toast.error("Failed to load similar dishes");
+    } finally {
+      setIsLoadingSimilar(false);
     }
   };
 
@@ -72,6 +111,16 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
 
   const formatDeliveryTime = (min: number, max: number) => {
     return `${min}-${max} min`;
+  };
+
+  const handleRegionSelect = (restaurantId: string) => {
+    setSelectedRegion(restaurantId);
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    if (restaurant) {
+      // Use both name and description for better matching
+      const searchQuery = `${restaurant.name} ${restaurant.description || ''} ${restaurant.cuisine_type} cuisine`;
+      fetchSimilarMeals(searchQuery);
+    }
   };
 
   return (
@@ -109,7 +158,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
             return (
               <button
                 key={restaurant.id}
-                onClick={() => setSelectedRegion(restaurant.id)}
+                onClick={() => handleRegionSelect(restaurant.id)}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 group"
                 style={{
                   top: position.top,
@@ -143,40 +192,84 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
 
         {/* Selected Restaurant Details */}
         {selectedRegion && (
-          <Card className="p-4">
+          <div className="space-y-4">
             {restaurants.filter(r => r.id === selectedRegion).map(restaurant => (
-              <div key={restaurant.id} className="space-y-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-xl font-bold">{restaurant.name}</h3>
-                    <p className="text-gray-600">{restaurant.cuisine_type} Cuisine</p>
+              <Card key={restaurant.id} className="p-4">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-xl font-bold">{restaurant.name}</h3>
+                      <p className="text-gray-600">{restaurant.cuisine_type} Cuisine</p>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setSelectedRegion(null)}
+                    >
+                      ✕
+                    </Button>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setSelectedRegion(null)}
-                  >
-                    ✕
+                  
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <span className="flex items-center">
+                      <Clock className="w-4 h-4 mr-1" />
+                      {formatDeliveryTime(restaurant.delivery_time_min, restaurant.delivery_time_max)}
+                    </span>
+                    <span className="flex items-center">
+                      <Star className="w-4 h-4 mr-1 text-yellow-400" />
+                      {restaurant.rating}
+                    </span>
+                  </div>
+
+                  {restaurant.description && (
+                    <p className="text-gray-600 text-sm">{restaurant.description}</p>
+                  )}
+
+                  <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                    View Menu
                   </Button>
                 </div>
-                
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                  <span className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1" />
-                    {formatDeliveryTime(restaurant.delivery_time_min, restaurant.delivery_time_max)}
-                  </span>
-                  <span className="flex items-center">
-                    <Star className="w-4 h-4 mr-1 text-yellow-400" />
-                    {restaurant.rating}
-                  </span>
-                </div>
-
-                <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                  View Menu
-                </Button>
-              </div>
+              </Card>
             ))}
-          </Card>
+
+            {/* Similar Meals Section */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-gray-800">Available Near You</h4>
+              
+              {isLoadingSimilar ? (
+                <div className="text-center py-4">
+                  <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-gray-600" />
+                  <p className="text-sm text-gray-500">Finding similar dishes...</p>
+                </div>
+              ) : similarMeals.length > 0 ? (
+                <div className="space-y-2">
+                  {similarMeals.map((meal) => (
+                    <Card key={meal.id} className="p-3 hover:bg-gray-50 transition-colors">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xl">{meal.emoji}</span>
+                            <div>
+                              <h5 className="font-medium text-gray-800">{meal.name}</h5>
+                              <p className="text-sm text-gray-600">{meal.restaurant}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium text-gray-800">{meal.price}</p>
+                          <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 text-center py-4">
+                  No similar dishes found nearby
+                </p>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>
