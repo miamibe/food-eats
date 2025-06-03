@@ -27,6 +27,26 @@ const RestaurantCatalogue = ({ onRestaurantClick }: RestaurantCatalogueProps) =>
     fetchRestaurants();
   }, []);
 
+  const getRestaurantImage = (restaurant: Restaurant) => {
+    if (restaurant.image_url) {
+      return restaurant.image_url;
+    }
+    
+    // Fallback images based on cuisine type
+    const imageMap: { [key: string]: string } = {
+      'Russian': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop',
+      'Thai': 'https://images.unsplash.com/photo-1559847844-d721426d6edc?w=400&h=300&fit=crop',
+      'American': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop',
+      'Healthy': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop',
+      'Japanese': 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop',
+      'Italian': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop',
+      'Indian': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop',
+      'Mexican': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop'
+    };
+
+    return imageMap[restaurant.cuisine_type] || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop';
+  };
+
   const fetchRestaurants = async () => {
     try {
       console.log('Fetching restaurants...');
@@ -143,9 +163,14 @@ const RestaurantCatalogue = ({ onRestaurantClick }: RestaurantCatalogueProps) =>
           >
             <div className="aspect-square bg-gray-100">
               <img
-                src={restaurant.image_url}
+                src={getRestaurantImage(restaurant)}
                 alt={restaurant.name}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Fallback to a generic restaurant image if the specific image fails
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop';
+                }}
               />
             </div>
             <div className="p-3">
