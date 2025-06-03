@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Clock, DollarSign, Loader2, Star } from "lucide-react";
+import { ArrowLeft, Clock, Loader2, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
-interface CuisineAdventureMapProps {
-  onBack: () => void;
-}
+import { useCart, addToCart } from "@/lib/cart";
 
 interface Restaurant {
   id: string;
@@ -24,11 +21,15 @@ interface SimilarMeal {
   id: string;
   name: string;
   restaurant: string;
-  price: string;
+  price: number;
   deliveryTime: string;
   emoji: string;
   description: string;
   relevance_score: number;
+}
+
+interface CuisineAdventureMapProps {
+  onBack: () => void;
 }
 
 const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
@@ -37,6 +38,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
+  const { dispatch } = useCart();
 
   useEffect(() => {
     fetchAllRestaurants();
@@ -117,10 +119,20 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
     setSelectedRegion(restaurantId);
     const restaurant = restaurants.find(r => r.id === restaurantId);
     if (restaurant) {
-      // Use both name and description for better matching
       const searchQuery = `${restaurant.name} ${restaurant.description || ''} ${restaurant.cuisine_type} cuisine`;
       fetchSimilarMeals(searchQuery);
     }
+  };
+
+  const handleAddToCart = (meal: SimilarMeal) => {
+    addToCart(dispatch, {
+      id: meal.id,
+      name: meal.name,
+      price: typeof meal.price === 'string' ? parseFloat(meal.price.replace('$', '')) : meal.price,
+      quantity: 1,
+      restaurant: meal.restaurant,
+      emoji: meal.emoji
+    });
   };
 
   return (
@@ -224,10 +236,6 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                   {restaurant.description && (
                     <p className="text-gray-600 text-sm">{restaurant.description}</p>
                   )}
-
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                    View Menu
-                  </Button>
                 </div>
               </Card>
             ))}
@@ -239,13 +247,17 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
               {isLoadingSimilar ? (
                 <div className="text-center py-4">
                   <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-gray-600" />
-                  <p className="text-sm text-gray-500">Finding similar dishes...</p>
+                  <p className="text-gray-500 text-sm">Finding similar dishes...</p>
                 </div>
               ) : similarMeals.length > 0 ? (
                 <div className="space-y-2">
                   {similarMeals.map((meal) => (
-                    <Card key={meal.id} className="p-3 hover:bg-gray-50 transition-colors">
-                      <div className="flex justify-between items-center">
+                    <Card 
+                      key={meal.id} 
+                      className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => handleAddToCart(meal)}
+                    >
+                      <div className="flex items-center justify-between">
                         <div>
                           <div className="flex items-center space-x-2">
                             <span className="text-xl">{meal.emoji}</span>
@@ -264,7 +276,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500 text-center py-4">
+                <p className="text-center text-gray-500 py-4">
                   No similar dishes found nearby
                 </p>
               )}
