@@ -12,11 +12,11 @@ interface SimilarMeal {
   id: string;
   name: string;
   restaurant: string;
-  price: number;
+  price: number | string;
   deliveryTime: string;
   emoji: string;
   description: string;
-  relevance_score: number;
+  relevance_score?: number;
   match_explanation?: string;
 }
 

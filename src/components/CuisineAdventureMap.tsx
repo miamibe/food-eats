@@ -21,11 +21,11 @@ interface SimilarMeal {
   id: string;
   name: string;
   restaurant: string;
-  price: number;
+  price: number | string;
   deliveryTime: string;
   emoji: string;
   description: string;
-  relevance_score: number;
+  relevance_score?: number;
   match_explanation?: string;
 }
 
@@ -305,7 +305,7 @@ const CuisineAdventureMap = ({ onBack }: CuisineAdventureMapProps) => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-gray-800">${meal.price}</p>
+                          <p className="font-medium text-gray-800">{meal.price}</p>
                           <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
                         </div>
                       </div>
