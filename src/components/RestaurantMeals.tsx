@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCart, addToCart } from "@/lib/cart";
 
 interface Meal {
   id: string;
@@ -26,6 +26,7 @@ interface RestaurantMealsProps {
 const RestaurantMeals = ({ restaurantId, restaurantName, onBack }: RestaurantMealsProps) => {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { dispatch } = useCart();
 
   useEffect(() => {
     fetchMeals();
@@ -65,6 +66,17 @@ const RestaurantMeals = ({ restaurantId, restaurantName, onBack }: RestaurantMea
     return `${minutes} min`;
   };
 
+  const handleAddToCart = (meal: Meal) => {
+    addToCart(dispatch, {
+      id: meal.id,
+      name: meal.name,
+      price: meal.price,
+      quantity: 1,
+      restaurant: restaurantName,
+      emoji: meal.emoji || '🍽️'
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -98,7 +110,11 @@ const RestaurantMeals = ({ restaurantId, restaurantName, onBack }: RestaurantMea
           <h3 className="text-base font-medium text-gray-700">Available Meals</h3>
           <div className="space-y-3">
             {meals.map((meal) => (
-              <Card key={meal.id} className="p-4 border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer">
+              <Card 
+                key={meal.id} 
+                className="p-4 border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
+                onClick={() => handleAddToCart(meal)}
+              >
                 <div className="flex space-x-4">
                   {/* Meal Image */}
                   <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
@@ -136,21 +152,16 @@ const RestaurantMeals = ({ restaurantId, restaurantName, onBack }: RestaurantMea
                     </div>
                   </div>
                 </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full mt-2 border border-gray-200"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add to Cart
+                </Button>
               </Card>
             ))}
-          </div>
-
-          <div className="flex space-x-3 mt-6">
-            <Button 
-              onClick={onBack}
-              variant="outline" 
-              className="flex-1 border-gray-200 hover:bg-gray-50"
-            >
-              Back to Restaurants
-            </Button>
-            <Button className="flex-1 bg-gray-800 hover:bg-gray-700">
-              Add to Cart
-            </Button>
           </div>
         </div>
       ) : (

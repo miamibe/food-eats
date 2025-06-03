@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
-import { CartButton } from "@/components/CartButton";
 import GameIcons from "@/components/GameIcons";
 import QuizFlow from "@/components/QuizFlow";
 import CuisineAdventureMap from "@/components/CuisineAdventureMap";
@@ -11,6 +10,7 @@ import BrowseSection from "@/components/BrowseSection";
 import MealSearch from "@/components/MealSearch";
 import RestaurantCatalogue from "@/components/RestaurantCatalogue";
 import RestaurantMeals from "@/components/RestaurantMeals";
+import { CartSheet } from "@/components/CartSheet";
 
 const Index = () => {
   const [activeView, setActiveView] = useState("home");
@@ -110,7 +110,7 @@ const Index = () => {
             <h1 className="text-lg font-medium text-gray-800">EasyBite</h1>
           </div>
           <div className="flex items-center space-x-2">
-            <CartButton />
+            <CartSheet />
             <Button variant="ghost" size="sm" className="rounded-full p-2 hover:bg-gray-50">
               <User className="w-5 h-5 text-gray-500" />
             </Button>
