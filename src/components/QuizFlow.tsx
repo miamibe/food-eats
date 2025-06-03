@@ -1,17 +1,33 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { useCart, addToCart } from "@/lib/cart";
+import { toast } from "sonner";
 
 interface QuizFlowProps {
   onBack: () => void;
 }
 
+interface SimilarMeal {
+  id: string;
+  name: string;
+  restaurant: string;
+  price: number | string;
+  deliveryTime: string;
+  emoji: string;
+  description: string;
+  relevance_score?: number;
+  match_explanation?: string;
+}
+
 const QuizFlow = ({ onBack }: QuizFlowProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [recommendations, setRecommendations] = useState<SimilarMeal[]>([]);
+  const { dispatch } = useCart();
 
   const questions = [
     {
@@ -63,21 +79,89 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
 
   const progress = ((currentStep + 1) / questions.length) * 100;
 
+  const buildSearchQuery = (answers: Record<string, string>) => {
+    const moodMap = {
+      happy: "fresh vibrant energizing",
+      comfort: "hearty comforting warm traditional",
+      healthy: "healthy light fresh nutritious",
+      adventurous: "unique exotic spicy special"
+    };
+
+    const budgetMap = {
+      budget: "affordable cheap budget-friendly under $10",
+      moderate: "moderate-price reasonable-cost",
+      premium: "premium high-quality",
+      luxury: "luxury gourmet exclusive"
+    };
+
+    const timeMap = {
+      asap: "quick fast ready-to-eat",
+      normal: "standard-preparation",
+      patient: "slow-cooked carefully-prepared"
+    };
+
+    const queryParts = [
+      moodMap[answers.mood as keyof typeof moodMap],
+      budgetMap[answers.budget as keyof typeof budgetMap],
+      timeMap[answers.time as keyof typeof timeMap],
+      answers.cuisine !== "surprise" ? answers.cuisine : "popular recommended"
+    ];
+
+    return queryParts.filter(Boolean).join(" ");
+  };
+
+  const fetchRecommendations = async () => {
+    setIsLoading(true);
+    try {
+      const searchQuery = buildSearchQuery(answers);
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-meals`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: searchQuery }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch recommendations');
+      }
+
+      const data = await response.json();
+      setRecommendations(data.meals || []);
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      toast.error("Failed to get recommendations");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleAnswer = (questionId: string, answer: string) => {
     setAnswers({ ...answers, [questionId]: answer });
     
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Quiz completed - show results
       setCurrentStep(questions.length);
+      fetchRecommendations();
     }
+  };
+
+  const handleAddToCart = (meal: SimilarMeal) => {
+    addToCart(dispatch, {
+      id: meal.id,
+      name: meal.name,
+      price: typeof meal.price === 'string' ? parseFloat(meal.price.replace('$', '')) : meal.price,
+      quantity: 1,
+      restaurant: meal.restaurant,
+      emoji: meal.emoji
+    });
   };
 
   const currentQuestion = questions[currentStep];
 
   if (currentStep >= questions.length) {
-    // Results screen
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-3">
@@ -87,72 +171,71 @@ const QuizFlow = ({ onBack }: QuizFlowProps) => {
           <h2 className="text-xl font-bold text-gray-800">Your Perfect Matches!</h2>
         </div>
 
-        <div className="text-center py-8">
-          <div className="text-6xl mb-4">🎉</div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">Great choices!</h3>
-          <p className="text-gray-600 mb-6">Based on your preferences, here are your top picks:</p>
-        </div>
-
-        <div className="space-y-4">
-          {[
-            {
-              name: "Spicy Thai Curry",
-              restaurant: "Bangkok Kitchen",
-              match: "95%",
-              price: "$12.99",
-              time: "25 min",
-              emoji: "🍛",
-            },
-            {
-              name: "Margherita Pizza",
-              restaurant: "Tony's Pizzeria",
-              match: "90%",
-              price: "$14.50",
-              time: "30 min",
-              emoji: "🍕",
-            },
-            {
-              name: "Chicken Burrito Bowl",
-              restaurant: "Fresh Mexican",
-              match: "85%",
-              price: "$11.75",
-              time: "20 min",
-              emoji: "🌯",
-            },
-          ].map((item, index) => (
-            <Card key={index} className="p-4 border-2 border-green-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="text-2xl">{item.emoji}</div>
-                  <div>
-                    <h4 className="font-bold text-gray-800">{item.name}</h4>
-                    <p className="text-sm text-gray-600">{item.restaurant}</p>
+        {isLoading ? (
+          <div className="text-center py-8">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-600" />
+            <p className="text-gray-500">Finding your perfect matches...</p>
+          </div>
+        ) : recommendations.length > 0 ? (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              {recommendations.map((meal) => (
+                <Card 
+                  key={meal.id} 
+                  className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() => handleAddToCart(meal)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl">{meal.emoji}</span>
+                        <div>
+                          <h4 className="font-medium text-gray-800">{meal.name}</h4>
+                          <p className="text-sm text-gray-600">{meal.restaurant}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium text-gray-800">{meal.price}</p>
+                      <p className="text-sm text-gray-500">{meal.deliveryTime}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-green-600 font-bold text-sm">{item.match} match</div>
-                  <div className="text-gray-600 text-sm">{item.price} • {item.time}</div>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+                  {meal.match_explanation && (
+                    <p className="mt-2 text-sm text-gray-600">{meal.match_explanation}</p>
+                  )}
+                </Card>
+              ))}
+            </div>
 
-        <div className="flex space-x-3">
-          <Button 
-            onClick={() => {
-              setCurrentStep(0);
-              setAnswers({});
-            }}
-            variant="outline" 
-            className="flex-1"
-          >
-            Take Quiz Again
-          </Button>
-          <Button className="flex-1 bg-green-500 hover:bg-green-600">
-            Order Now
-          </Button>
-        </div>
+            <div className="flex space-x-3">
+              <Button 
+                onClick={() => {
+                  setCurrentStep(0);
+                  setAnswers({});
+                  setRecommendations([]);
+                }}
+                variant="outline" 
+                className="flex-1"
+              >
+                Take Quiz Again
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No matches found. Try taking the quiz again!</p>
+            <Button 
+              onClick={() => {
+                setCurrentStep(0);
+                setAnswers({});
+                setRecommendations([]);
+              }}
+              className="mt-4"
+            >
+              Take Quiz Again
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
