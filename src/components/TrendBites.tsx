@@ -31,8 +31,8 @@ interface TrendingDish {
   funFact: string;
 }
 
-const TrendBites = ({ onBack }: TrendBitesProps) => {
-  const [currentTrend, setCurrentTrend] = useState(0);
+const TrendBites: React.FC<TrendBitesProps> = ({ onBack }) => {
+  const [currentTrend, setCurrentTrend] = useState(() => Math.floor(Math.random() * trendingDishes.length));
   const [similarMeals, setSimilarMeals] = useState<SimilarMeal[]>([]);
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
   const { dispatch } = useCart();
@@ -211,27 +211,6 @@ const TrendBites = ({ onBack }: TrendBitesProps) => {
               No similar dishes found nearby
             </p>
           )}
-        </div>
-
-        {/* Navigation */}
-        <div className="flex justify-between items-center pt-4">
-          <Button 
-            onClick={() => setCurrentTrend((prev) => (prev - 1 + trendingDishes.length) % trendingDishes.length)} 
-            variant="outline" 
-            className="flex-1 mr-2"
-          >
-            ← Previous Trend
-          </Button>
-          <div className="text-sm text-gray-500 px-4">
-            {currentTrend + 1} of {trendingDishes.length}
-          </div>
-          <Button 
-            onClick={() => setCurrentTrend((prev) => (prev + 1) % trendingDishes.length)} 
-            variant="outline" 
-            className="flex-1 ml-2"
-          >
-            Next Trend →
-          </Button>
         </div>
       </div>
     </div>
