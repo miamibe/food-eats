@@ -100,7 +100,7 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
     addToCart(dispatch, {
       id: meal.id,
       name: meal.name,
-      price: parseFloat(meal.price.replace('$', '')),
+      price: typeof meal.price === 'string' ? parseFloat(meal.price.replace('$', '')) : meal.price,
       quantity: 1,
       restaurant: meal.restaurant,
       emoji: meal.emoji
@@ -108,7 +108,7 @@ const MealSearch = ({ onBack, isInline = false }: MealSearchProps) => {
   };
 
   return (
-    <div className="space-y-6" ref={containerRef}>
+    <div className="w-full space-y-6" ref={containerRef}>
       {/* Header */}
       <div className="flex items-center space-x-3">
         <Button variant="ghost" onClick={onBack} className="p-2 hover:bg-gray-50">
