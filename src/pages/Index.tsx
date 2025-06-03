@@ -142,7 +142,7 @@ const Index = () => {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-gray-800">Food Eats</h1>
-                <p className="text-xs text-gray-500">Delicious food delivered</p>
+                <p className="text-xs text-gray-500">Top local picks, reliably delivered</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
