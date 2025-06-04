@@ -94,7 +94,7 @@ const Index = () => {
 
             <button
               onClick={handleSearchClick}
-              className="group relative w-full p-4 rounded-xl text-left transition-all duration-300 overflow-hidden bg-white"
+              className="group relative w-full h-12 rounded-xl text-left transition-all duration-300 overflow-hidden bg-white"
               style={{
                 backgroundImage: 'linear-gradient(white, white), linear-gradient(60deg, #FF6B6B, #4ECDC4, #FFE66D)',
                 backgroundOrigin: 'border-box',
@@ -103,11 +103,11 @@ const Index = () => {
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-orange-50/50 via-teal-50/50 to-yellow-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative flex items-center">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-orange-100 to-teal-100 group-hover:from-orange-200 group-hover:to-teal-200 transition-colors duration-300">
-                  <Search className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors" />
+              <div className="relative flex items-center h-full px-4">
+                <div className="p-1.5 rounded-lg bg-gradient-to-br from-orange-100 to-teal-100 group-hover:from-orange-200 group-hover:to-teal-200 transition-colors duration-300">
+                  <Search className="w-4 h-4 text-gray-600 group-hover:text-gray-800 transition-colors" />
                 </div>
-                <span className="ml-3 text-gray-600 group-hover:text-gray-800 transition-colors">
+                <span className="ml-3 text-gray-600 group-hover:text-gray-800 transition-colors truncate">
                   Hungry? Tell the AI what you're in the mood for
                 </span>
               </div>
