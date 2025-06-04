@@ -19,7 +19,6 @@ const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    // Initialize Eleven Labs widget
     const script = document.createElement('script');
     script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
     script.async = true;
@@ -40,26 +39,12 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleMoodMatcherClick = () => {
-    setActiveView("quiz");
-  };
-
-  const handleCuisineMapClick = () => {
-    setActiveView("cuisine-map");
-  };
-
-  const handleGameClick = () => {
-    setActiveView("game");
-  };
-
-  const handleTrendBitesClick = () => {
-    setActiveView("trend-bites");
-  };
-
-  const handleSearchClick = () => {
-    setActiveView("search");
-  };
-
+  const handleMoodMatcherClick = () => setActiveView("quiz");
+  const handleCuisineMapClick = () => setActiveView("cuisine-map");
+  const handleGameClick = () => setActiveView("game");
+  const handleTrendBitesClick = () => setActiveView("trend-bites");
+  const handleSearchClick = () => setActiveView("search");
+  
   const handleRestaurantClick = (restaurantId: string, restaurantName: string) => {
     setSelectedRestaurant({ id: restaurantId, name: restaurantName });
     setActiveView("restaurant-meals");
@@ -109,9 +94,14 @@ const Index = () => {
 
             <button
               onClick={handleSearchClick}
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors relative group"
+              className="w-full p-4 rounded-lg text-left transition-all duration-300 relative group overflow-hidden"
+              style={{
+                background: 'linear-gradient(white, white) padding-box, linear-gradient(to right, #FF6B6B, #4ECDC4) border-box',
+                border: '2px solid transparent'
+              }}
             >
-              <div className="flex items-center">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-teal-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex items-center">
                 <Search className="w-5 h-5 text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
                 <span className="text-gray-500 group-hover:text-gray-700 transition-colors">
                   Hungry? Tell the AI what you're in the mood for
@@ -159,7 +149,6 @@ const Index = () => {
         {renderMainContent()}
       </main>
 
-      {/* Eleven Labs Voice Support Widget */}
       <elevenlabs-convai agent-id="agent_01jwv787fbe1dstxdt93fqyr5w"></elevenlabs-convai>
     </div>
   );
