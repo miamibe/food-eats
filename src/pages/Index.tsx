@@ -94,16 +94,20 @@ const Index = () => {
 
             <button
               onClick={handleSearchClick}
-              className="w-full p-4 rounded-lg text-left transition-all duration-300 relative group overflow-hidden"
+              className="group relative w-full p-4 rounded-xl text-left transition-all duration-300 overflow-hidden bg-white"
               style={{
-                background: 'linear-gradient(white, white) padding-box, linear-gradient(to right, #FF6B6B, #4ECDC4) border-box',
-                border: '2px solid transparent'
+                backgroundImage: 'linear-gradient(white, white), linear-gradient(60deg, #FF6B6B, #4ECDC4, #FFE66D)',
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+                border: '2px solid transparent',
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-teal-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-50/50 via-teal-50/50 to-yellow-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative flex items-center">
-                <Search className="w-5 h-5 text-gray-400 mr-3 group-hover:text-gray-600 transition-colors" />
-                <span className="text-gray-500 group-hover:text-gray-700 transition-colors">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-orange-100 to-teal-100 group-hover:from-orange-200 group-hover:to-teal-200 transition-colors duration-300">
+                  <Search className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors" />
+                </div>
+                <span className="ml-3 text-gray-600 group-hover:text-gray-800 transition-colors">
                   Hungry? Tell the AI what you're in the mood for
                 </span>
               </div>
@@ -132,7 +136,7 @@ const Index = () => {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-gray-800">Food Eats</h1>
-                <p className="text-xs text-gray-500">Discover great eats around you</p>
+                <p className="text-xs text-gray-500">Top local picks, reliably delivered</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
